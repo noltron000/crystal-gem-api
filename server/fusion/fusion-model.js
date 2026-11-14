@@ -1,26 +1,28 @@
 // Implement fusion-model.js.
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 // Set Schema
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 const FusionSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-		unique: true
+		unique: true,
 	},
-	gems: [{
-		type: Schema.Types.ObjectId,
-		ref: 'Gem'
-	}],
+	gems: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Gem',
+		},
+	],
 	weapon: {
 		type: String,
-		required: true
+		required: true,
 	},
 	power: {
 		type: String,
-		required: true
-	}
-});
+		required: true,
+	},
+})
 
-module.exports = mongoose.model('Fusion', FusionSchema);
+module.exports = mongoose.model('Fusion', FusionSchema)

@@ -13,7 +13,7 @@
 	"scripts": {
 		"start": "node index.js",
 		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
-		"lint": "eslint *.js server config --color",
+		"lint": "prettier --check *.js server config",
 		"precommit": "yarn lint && yarn test",
 		"prepare": "husky",
 		"test": "cross-env NODE_ENV=test mocha --ui bdd --reporter spec --colors server --recursive",
@@ -52,13 +52,15 @@
 		"mongoose": "9.12.1"
 	},
 	"devDependencies": {
-		"@eslint/js": "10.0.1",
 		"c8": "12.0.0",
 		"cross-env": "10.1.0",
-		"eslint": "10.15.0",
-		"globals": "17.14.0",
 		"husky": "9.1.7",
-		"mocha": "12.0.3"
+		"mocha": "12.0.3",
+		"prettier": "3.10.1"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"semi": false
 	},
 	"license": "MIT",
 	"c8": {
