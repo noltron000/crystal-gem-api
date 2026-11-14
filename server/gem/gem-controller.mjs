@@ -1,5 +1,5 @@
-const express = require('express')
-const Gem = require('../gem/gem-model.js')
+import express from 'express'
+import Gem from '../gem/gem-model.mjs'
 
 const router = new express.Router()
 router.get('/', (req, res) => {
@@ -118,4 +118,4 @@ router.delete('/:gemID', (req, res) => {
 		})
 })
 
-module.exports = router
+export default router

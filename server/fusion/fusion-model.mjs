@@ -1,5 +1,5 @@
-// Implement fusion-model.js.
-const mongoose = require('mongoose')
+// Implement fusion-model.mjs.
+import mongoose from 'mongoose'
 
 // Set Schema
 const Schema = mongoose.Schema
@@ -25,4 +25,4 @@ const FusionSchema = new Schema({
 	},
 })
 
-module.exports = mongoose.model('Fusion', FusionSchema)
+export default mongoose.model('Fusion', FusionSchema)

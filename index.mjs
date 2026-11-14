@@ -1,11 +1,13 @@
 // mongoose and util come first
-const mongoose = require('mongoose')
-const util = require('util')
+import mongoose from 'mongoose'
+import util from 'node:util'
 
 // config & app should be imported before any other file
-const config = require('./config/config.js')
-const app = require('./config/express.js')
-const debug = require('debug')('auth-api-starterpack:index')
+import config from './config/config.mjs'
+import app from './config/express.mjs'
+import createDebug from 'debug'
+
+const debug = createDebug('auth-api-starterpack:index')
 
 // connect to mongo db
 const mongoUri = process.env.MONGODB_URI || config.mongo.host
@@ -30,4 +32,4 @@ app.listen(process.env.PORT || config.port, () => {
 	console.info(`server started on port ${config.port} (${config.env})`) // eslint-disable-line no-console
 })
 
-module.exports = app
+export default app

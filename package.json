@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "A Boilerplate application for building REST APIs using express, mongoose in ES6 with code coverage",
 	"author": "Dani Roxberry <dani@makeschool.com>",
-	"main": "index.js",
+	"main": "index.mjs",
 	"private": false,
 	"engines": {
 		"node": ">=26.0.0",
@@ -11,14 +11,14 @@
 		"yarn": ">=1.5.1"
 	},
 	"scripts": {
-		"start": "node index.js",
+		"start": "node index.mjs",
 		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
-		"lint": "prettier --check *.js server config",
+		"lint": "prettier --check *.mjs server config",
 		"precommit": "yarn lint && yarn test",
 		"prepare": "husky",
-		"test": "cross-env NODE_ENV=test mocha --ui bdd --reporter spec --colors server --recursive",
+		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
 		"test:watch": "yarn test -- --watch",
-		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --ui bdd --reporter spec --colors server --recursive",
+		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
 		"test:check-coverage": "yarn test:coverage && c8 check-coverage"
 	},
 	"repository": {
@@ -68,7 +68,7 @@
 		"exclude": [
 			"dist/**",
 			"coverage/**",
-			"index.js"
+			"index.mjs"
 		],
 		"reporter": [
 			"lcov"

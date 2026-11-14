@@ -1,12 +1,12 @@
 // Require middleware
-const express = require('express')
-const { engine } = require('express-handlebars')
-const cors = require('cors')
-const methodOverride = require('method-override')
+import express from 'express'
+import { engine } from 'express-handlebars'
+import cors from 'cors'
+import methodOverride from 'method-override'
 // Required files
-const auth = require('../server/auth/auth-route.js')
-const gem = require('../server/gem/gem-controller.js')
-const fusion = require('../server/fusion/fusion-controller.js')
+import auth from '../server/auth/auth-route.mjs'
+import gem from '../server/gem/gem-controller.mjs'
+import fusion from '../server/fusion/fusion-controller.mjs'
 // Define app
 const app = express()
 // // Define router
@@ -38,6 +38,6 @@ app.use('/auth', auth)
 app.use('/gem', gem)
 app.use('/fusion', fusion)
 
-module.exports = app
+export default app
 // // Confused about router vs app
-// module.exports = router;
+// export default router

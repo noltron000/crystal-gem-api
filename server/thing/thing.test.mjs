@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 /**
  * root level hooks
@@ -12,5 +12,5 @@ after((done) => {
 })
 
 describe('## Thing APIs', () => {
-	// #TODO: Implement thing.test.js.
+	// #TODO: Implement thing.test.mjs.
 })

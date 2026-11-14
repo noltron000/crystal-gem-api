@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 /**
  * root level hooks
@@ -12,5 +12,5 @@ after((done) => {
 })
 
 describe('## Gem APIs', () => {
-	// #TODO: Implement gem-test.js.
+	// #TODO: Implement gem-test.mjs.
 })

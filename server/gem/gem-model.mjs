@@ -1,5 +1,5 @@
-// Implement gem-model.js.
-const mongoose = require('mongoose')
+// Implement gem-model.mjs.
+import mongoose from 'mongoose'
 
 // Set Schema
 const Schema = mongoose.Schema
@@ -25,4 +25,4 @@ const GemSchema = new Schema({
 	},
 })
 
-module.exports = mongoose.model('Gem', GemSchema)
+export default mongoose.model('Gem', GemSchema)

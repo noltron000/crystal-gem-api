@@ -1,7 +1,8 @@
-const Joi = require('joi')
+import Joi from 'joi'
+import dotenv from 'dotenv'
 
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
-require('dotenv').config()
+dotenv.config()
 
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
@@ -39,4 +40,4 @@ const config = {
 	},
 }
 
-module.exports = config
+export default config

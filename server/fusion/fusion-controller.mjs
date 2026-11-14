@@ -1,6 +1,6 @@
-const express = require('express')
-const Gem = require('../gem/gem-model.js')
-const Fusion = require('../fusion/fusion-model.js')
+import express from 'express'
+import Gem from '../gem/gem-model.mjs'
+import Fusion from '../fusion/fusion-model.mjs'
 
 const router = new express.Router()
 router.get('/', (req, res) => {
@@ -171,4 +171,4 @@ router.delete('/:fusionID', (req, res) => {
 		})
 })
 
-module.exports = router
+export default router
