@@ -1,7 +1,6 @@
 // Require middleware
 const express = require('express');
 const { engine } = require('express-handlebars');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const methodOverride = require('method-override');
 // Required files
@@ -15,8 +14,8 @@ const app = express();
 // const router = new express.Router(); // eslint-disable-line new-cap
 
 // Use body parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // override with POST having ?_method=DELETE or ?_method=PUT
 app.use(express.static('public'));
