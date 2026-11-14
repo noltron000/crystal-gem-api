@@ -106,7 +106,7 @@ router.put('/:gemID', (req, res) => { // DONE: UPDATE //
 
 router.delete('/:gemID', (req, res) => { // DONE: DELETE //
 	Gem
-		.findByIdAndRemove(req.params.gemID)
+		.findByIdAndDelete(req.params.gemID)
 		.then(() => {
 			res.redirect('/gem');
 		})

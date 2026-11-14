@@ -31,7 +31,7 @@ Custom, authenticated API instructions and starter pack for BEW1.2 students!
 	$ cp .env.example .env
 ```
 
-1. Run `nvm use` to activate the v8.11.1 node environment.
+1. Run `nvm use` to activate the Node.js 26 environment.
 1. Run `yarn install` to install project dependencies into the activated environment.
 1. Execute `yarn start` to run the development server.
 

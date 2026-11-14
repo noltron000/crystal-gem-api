@@ -1,6 +1,6 @@
 // Require middleware
 const express = require('express');
-const exprHBS = require('express-handlebars');
+const { engine } = require('express-handlebars');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const methodOverride = require('method-override');
@@ -26,7 +26,7 @@ app.use(methodOverride('_method'));
 app.use(cors());
 
 // Set up handlebars
-app.engine('.hbs', exprHBS({ extname: '.hbs', defaultLayout: 'main' }));
+app.engine('.hbs', engine({ extname: '.hbs', defaultLayout: 'main' }));
 app.set('view engine', 'hbs');
 
 // Start up basic routes

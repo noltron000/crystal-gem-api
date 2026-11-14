@@ -62,10 +62,11 @@ router.post('/', (req, res) => { // DONE: CREATE //
 			// give fusionID to gems, in array
 			for (const key in fusionBody) {
 				if (fusionBody[key] === 'on') {
-					Gem.findById(key, (err, gem) => {
-						gem.fusions.push(fusion._id);
-						gem.save();
-					});
+					Gem.findById(key)
+						.then((gem) => {
+							gem.fusions.push(fusion._id);
+							return gem.save();
+						});
 				}
 			}
 			res.redirect('/fusion');
@@ -146,10 +147,11 @@ router.put('/:fusionID', (req, res) => { // DONE: UPDATE //
 		.then((fusion) => {
 			for (const key in fusionBody) {
 				if (fusionBody[key] === 'on') {
-					Gem.findById(key, (err, gem) => {
-						gem.fusions.push(fusion._id);
-						gem.save();
-					});
+					Gem.findById(key)
+						.then((gem) => {
+							gem.fusions.push(fusion._id);
+							return gem.save();
+						});
 				}
 			}
 			res.redirect(`/fusion/${fusion._id}`);
@@ -161,7 +163,7 @@ router.put('/:fusionID', (req, res) => { // DONE: UPDATE //
 
 router.delete('/:fusionID', (req, res) => { // DONE: DELETE //
 	Fusion
-		.findByIdAndRemove(req.params.fusionID)
+		.findByIdAndDelete(req.params.fusionID)
 		.then(() => {
 			res.redirect('/fusion');
 		})
