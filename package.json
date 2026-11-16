@@ -1,30 +1,9 @@
 {
-	"name": "auth-api-starterpack",
-	"version": "1.0.0",
-	"description": "A Boilerplate application for building REST APIs using express, mongoose in ES6 with code coverage",
-	"author": "Dani Roxberry <dani@makeschool.com>",
-	"main": "index.mjs",
+	"name": "crystal-gem-api",
 	"private": false,
-	"engines": {
-		"node": ">=26.0.0",
-		"npm": ">=5.6.0",
-		"yarn": ">=1.5.1"
-	},
-	"scripts": {
-		"start": "node index.mjs",
-		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
-		"lint": "prettier --check *.mjs server config",
-		"precommit": "yarn lint && yarn test",
-		"prepare": "husky",
-		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
-		"test:watch": "yarn test -- --watch",
-		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
-		"test:check-coverage": "yarn test:coverage && c8 check-coverage"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:droxey/auth-api-starterpack.git"
-	},
+	"license": "MIT",
+	"version": "1.0.0",
+	"description": "An API for tracking Crystal Gems, Gem Fusions, and Gemsonas.",
 	"keywords": [
 		"express",
 		"node",
@@ -41,6 +20,46 @@
 		"authenticated",
 		"MVC"
 	],
+	"homepage": "https://projects.nebuloid.dev/crystal-gem-api",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/noltron000/crystal-gem-api.git"
+	},
+	"bugs": {
+		"email": "noltron000@gmail.com",
+		"url": "https://github.com/noltron000/crystal-gem-api/issues"
+	},
+	"authors": [
+		{
+			"name": "Nolan Kovacik",
+			"email": "noltron000@gmail.com",
+			"url": "https://nebuloid.dev/"
+		},
+		{
+			"name": "Dani Roxberry",
+			"email": "dani@makeschool.com",
+			"url": "https://droxey.com/"
+		}
+	],
+	"engines": {
+		"node": ">=26.0.0",
+		"npm": ">=5.6.0",
+		"yarn": ">=1.5.1"
+	},
+	"type": "module",
+	"main": "index.mjs",
+	"files": [],
+	"scripts": {
+		"start": "node index.mjs",
+		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
+		"lint": "prettier --check *.mjs server config",
+		"precommit": "yarn lint && yarn test",
+		"prepare": "husky",
+		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
+		"test:watch": "yarn test -- --watch",
+		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
+		"test:check-coverage": "yarn test:coverage && c8 check-coverage"
+	},
 	"dependencies": {
 		"cors": "2.8.6",
 		"debug": "^4.4.3",
@@ -58,11 +77,14 @@
 		"mocha": "12.0.3",
 		"prettier": "3.10.1"
 	},
+	"resolutions": {
+		"glob": "14.0.6",
+		"minimatch": "11.0.8"
+	},
 	"prettier": {
 		"singleQuote": true,
 		"semi": false
 	},
-	"license": "MIT",
 	"c8": {
 		"all": true,
 		"exclude": [
@@ -77,9 +99,5 @@
 		"functions": 50,
 		"lines": 50,
 		"statements": 50
-	},
-	"resolutions": {
-		"glob": "14.0.6",
-		"minimatch": "11.0.8"
 	}
 }
