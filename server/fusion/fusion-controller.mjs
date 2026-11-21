@@ -20,16 +20,16 @@ router.get('/json', async (req, res) => {
 })
 
 router.get('/new', async (req, res) => {
-	// Fetch all gems and render fusion creation form.
+	// Fetch all gems and render the fusion creation form.
 	const gems = await Gem.find({})
 	res.render('fusion-new.hbs', { gems: serialize(gems) })
 })
 
 router.post('/', async (req, res) => {
-	// Create fusion and establish relationships with gems.
+	// Create a fusion and establish its relationships with gems.
 	const fusionBody = req.body
 	fusionBody.gems = []
-	// Extract checked gem IDs from form.
+	// Extract the checked gem IDs from the form.
 	for (const key in fusionBody) {
 		if (fusionBody[key] === 'on') {
 			fusionBody.gems.push(key)
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
 	}
 	const fusion = new Fusion(fusionBody)
 	await fusion.save()
-	// Add new fusion to each associated gem.
+	// Add the new fusion to each associated gem.
 	for (const gemID of fusionBody.gems) {
 		const gem = await Gem.findById(gemID)
 		gem.fusions.push(fusion._id)
@@ -47,13 +47,13 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/:fusionID', async (req, res) => {
-	// Fetch and render fusion detail with related gems.
+	// Fetch and render a fusion with its related gems.
 	const fusion = await Fusion.findById(req.params.fusionID).populate('gems')
 	res.render('fusion-show.hbs', { fusion: serialize(fusion) })
 })
 
 router.get('/:fusionID/json', async (req, res) => {
-	// Fetch and return fusion detail as JSON.
+	// Fetch and return the fusion details as JSON.
 	const fusion = await Fusion.findById(req.params.fusionID)
 	res.status(200).json({
 		message: 'Show this fusion with the gems who create it.',
@@ -62,7 +62,7 @@ router.get('/:fusionID/json', async (req, res) => {
 })
 
 router.get('/:fusionID/edit', async (req, res) => {
-	// Fetch all gems and render fusion edit form.
+	// Fetch all gems and render the fusion edit form.
 	const gems = await Gem.find({})
 	const fusion = await Fusion.findById(req.params.fusionID)
 	const selectedGemIds = new Set(
@@ -70,7 +70,7 @@ router.get('/:fusionID/edit', async (req, res) => {
 	)
 	const serializedGems = serialize(gems).map((gem) => {
 		const selected = selectedGemIds.has(gem._id.toString())
-		// We can also track if the gem is selected or not.
+		// Add the selection state to each gem for the edit form.
 		return { ...gem, selected }
 	})
 	res.render('fusion-edit', {
@@ -80,10 +80,10 @@ router.get('/:fusionID/edit', async (req, res) => {
 })
 
 router.put('/:fusionID', async (req, res) => {
-	// Update fusion and gem relationships.
+	// Update a fusion and its gem relationships.
 	const fusionBody = req.body
 	fusionBody.gems = []
-	// Extract checked gem IDs from form.
+	// Extract the checked gem IDs from the form.
 	for (const key in fusionBody) {
 		if (fusionBody[key] === 'on') {
 			fusionBody.gems.push(key)
@@ -102,7 +102,7 @@ router.put('/:fusionID', async (req, res) => {
 })
 
 router.delete('/:fusionID', async (req, res) => {
-	// Delete fusion.
+	// Delete a fusion.
 	await Fusion.findByIdAndDelete(req.params.fusionID)
 	res.redirect('/fusion')
 })

@@ -1,10 +1,10 @@
 import Joi from 'joi'
 import dotenv from 'dotenv'
 
-// require and configure dotenv, will load vars in .env in PROCESS.ENV
+// Load environment variables from the .env file.
 dotenv.config()
 
-// define validation for all the env vars
+// Define validation for environment variables.
 const envVarsSchema = Joi.object({
 	NODE_ENV: Joi.string()
 		.allow('development', 'production', 'test', 'provision')

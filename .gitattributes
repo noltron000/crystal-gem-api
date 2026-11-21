@@ -1,4 +1,4 @@
-# Convert text file line endings to lf
+# Convert text file line endings to LF.
 * text=auto
 *.mjs text
 # Denote all files that are truly binary and should not be modified.

@@ -1,43 +1,38 @@
-// Require middleware
+// Import the middleware used by the application.
 import express from 'express'
 import { engine } from 'express-handlebars'
 import cors from 'cors'
 import methodOverride from 'method-override'
-// Required files
+// Import the application routes.
 import auth from '../server/auth/auth-route.mjs'
 import gem from '../server/gem/gem-controller.mjs'
 import fusion from '../server/fusion/fusion-controller.mjs'
-// Define app
+// Create the Express application.
 const app = express()
-// // Define router
-// // Confused about router vs app
-// const router = new express.Router(); // eslint-disable-line new-cap
 
-// Use body parser
+// Parse JSON and URL-encoded request bodies.
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// override with POST having ?_method=DELETE or ?_method=PUT
+// Allow POST requests to override the HTTP method through the _method query parameter.
 app.use(express.static('public'))
 app.use(methodOverride('_method'))
 
-// Enable CORS - Cross Origin Resource Sharing.
+// Enable cross-origin resource sharing.
 app.use(cors())
 
-// Set up handlebars
+// Configure Handlebars as the view engine.
 app.engine('.hbs', engine({ extname: '.hbs', defaultLayout: 'main' }))
 app.set('view engine', 'hbs')
 
-// Start up basic routes
+// Render the home page at the root route.
 app.get('/', (req, res) => {
 	res.render('home.hbs')
 })
 
-// Mount all other routes
+// Mount the authentication, gem, and fusion routes.
 app.use('/auth', auth)
 app.use('/gem', gem)
 app.use('/fusion', fusion)
 
 export default app
-// // Confused about router vs app
-// export default router

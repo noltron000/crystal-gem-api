@@ -1,1 +1,1 @@
-// #TODO: Implement authentication controller.
+// TODO: Authentication controller logic has not been implemented yet.

@@ -1,3 +1,3 @@
 describe('## Auth APIs', () => {
-	// # TODO: Implement Authentication Tests.
+	// TODO: Authentication tests have not been implemented yet.
 })

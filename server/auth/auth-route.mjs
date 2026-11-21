@@ -1,7 +1,7 @@
 import express from 'express'
 
-const router = new express.Router() // eslint-disable-line new-cap
+const router = new express.Router()
 
-// #TODO: Implement authentication routes.
+// TODO: Authentication routes have not been implemented yet.
 
 export default router

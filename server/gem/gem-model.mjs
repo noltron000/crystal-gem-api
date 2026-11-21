@@ -1,7 +1,6 @@
-// Implement gem-model.mjs.
 import mongoose from 'mongoose'
 
-// Set Schema
+// Define the gem schema.
 const Schema = mongoose.Schema
 const GemSchema = new Schema({
 	name: {

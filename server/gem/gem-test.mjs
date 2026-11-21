@@ -1,15 +1,13 @@
 import mongoose from 'mongoose'
 
-/**
- * root level hooks
- */
 after(async () => {
-	// required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+	// Reset Mongoose's model caches before closing the test connection.
+	// This works around https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092.
 	mongoose.models = {}
 	mongoose.modelSchemas = {}
 	await mongoose.connection.close()
 })
 
 describe('## Gem APIs', () => {
-	// #TODO: Implement gem-test.mjs.
+	// TODO: Gem API tests have not been implemented yet.
 })

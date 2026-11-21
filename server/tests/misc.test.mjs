@@ -1,3 +1,3 @@
 describe('## Misc', () => {
-	// #TODO: Miscellaenous tests go here.
+	// TODO: Miscellaneous tests have not been implemented yet.
 })

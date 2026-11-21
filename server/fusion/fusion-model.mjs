@@ -1,7 +1,6 @@
-// Implement fusion-model.mjs.
 import mongoose from 'mongoose'
 
-// Set Schema
+// Define the fusion schema.
 const Schema = mongoose.Schema
 const FusionSchema = new Schema({
 	name: {

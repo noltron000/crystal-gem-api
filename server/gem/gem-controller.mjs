@@ -19,25 +19,25 @@ router.get('/json', async (req, res) => {
 })
 
 router.get('/new', (req, res) => {
-	// Render gem creation form.
+	// Render the gem creation form.
 	res.render('gem-new.hbs')
 })
 
 router.post('/', async (req, res) => {
-	// Create and save new gem.
+	// Create and save a new gem.
 	const gem = new Gem(req.body)
 	await gem.save()
 	res.redirect('/gem')
 })
 
 router.get('/:gemID', async (req, res) => {
-	// Fetch and render gem detail with related fusions.
+	// Fetch and render a gem with its related fusions.
 	const gem = await Gem.findById(req.params.gemID).populate('fusions')
 	res.render('gem-show.hbs', { gem: serialize(gem) })
 })
 
 router.get('/:gemID/json', async (req, res) => {
-	// Fetch and return gem detail as JSON.
+	// Fetch and return the gem details as JSON.
 	const gem = await Gem.findById(req.params.gemID)
 	res.status(200).json({
 		message: 'Show this gem with the fusions it creates.',
@@ -46,19 +46,19 @@ router.get('/:gemID/json', async (req, res) => {
 })
 
 router.get('/:gemID/edit', async (req, res) => {
-	// Fetch and render gem edit form.
+	// Fetch and render the gem edit form.
 	const gem = await Gem.findById(req.params.gemID)
 	res.render('gem-edit', { gem: serialize(gem) })
 })
 
 router.put('/:gemID', async (req, res) => {
-	// Update gem with new data.
+	// Update a gem with the submitted data.
 	const gem = await Gem.findByIdAndUpdate(req.params.gemID, req.body)
 	res.redirect(`/gem/${gem._id}`)
 })
 
 router.delete('/:gemID', async (req, res) => {
-	// Delete gem.
+	// Delete a gem.
 	await Gem.findByIdAndDelete(req.params.gemID)
 	res.redirect('/gem')
 })
