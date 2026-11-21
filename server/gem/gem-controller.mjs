@@ -57,9 +57,9 @@ router.get('/:gemID', (req, res) => {
 	// shows a single gem in detail
 	Gem.findById(req.params.gemID)
 		.populate('fusions')
-		.then((gems) => {
+		.then((gem) => {
 			res // here's where SHOW differs
-				.render('gem-show.hbs', { gems })
+				.render('gem-show.hbs', { gem })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -71,11 +71,11 @@ router.get('/:gemID/json', (req, res) => {
 	// shows a single gem in detail
 	Gem.findById(req.params.gemID)
 		// .populate('fusions')
-		.then((gems) => {
+		.then((gem) => {
 			res // here's where SHOW JSON differs
 				.json({
 					message: 'Show this fusion with the gems who create it',
-					gems,
+					gem,
 				})
 				.status(200)
 		})
