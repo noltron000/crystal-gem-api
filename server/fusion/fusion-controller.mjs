@@ -1,7 +1,6 @@
 import express from 'express'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
-import { syncFusionGemReferences } from '../utils/relationships.mjs'
 import { serialize } from '../utils/serialize.mjs'
 
 const router = new express.Router()
@@ -27,18 +26,15 @@ router.get('/new', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-	// Create a fusion and establish its relationships with gems.
-	const fusionBody = req.body
-	fusionBody.gems = []
-	// Extract the checked gem IDs from the form.
-	for (const key in fusionBody) {
-		if (fusionBody[key] === 'on') {
-			fusionBody.gems.push(key)
-		}
+	// Create a fusion and its gem relationships.
+	const fusionBody = {
+		name: req.body.name,
+		weapon: req.body.weapon,
+		power: req.body.power,
+		gems: req.body.gems ?? [],
 	}
 	const fusion = new Fusion(fusionBody)
 	await fusion.save()
-	await syncFusionGemReferences(fusion._id, fusionBody.gems)
 	res.redirect('/fusion')
 })
 
@@ -77,27 +73,22 @@ router.get('/:fusionID/edit', async (req, res) => {
 
 router.put('/:fusionID', async (req, res) => {
 	// Update a fusion and its gem relationships.
-	const fusionBody = req.body
-	fusionBody.gems = []
-	// Extract the checked gem IDs from the form.
-	for (const key in fusionBody) {
-		if (fusionBody[key] === 'on') {
-			fusionBody.gems.push(key)
-		}
+	const fusionBody = {
+		name: req.body.name,
+		weapon: req.body.weapon,
+		power: req.body.power,
+		gems: req.body.gems ?? [],
 	}
 	const fusion = await Fusion.findByIdAndUpdate(
 		req.params.fusionID,
 		fusionBody,
 	)
-	await syncFusionGemReferences(fusion._id, fusionBody.gems)
 	res.redirect(`/fusion/${fusion._id}`)
 })
 
 router.delete('/:fusionID', async (req, res) => {
 	// Delete a fusion.
-	const fusionID = req.params.fusionID
-	await Fusion.findByIdAndDelete(fusionID)
-	await syncFusionGemReferences(fusionID, [])
+	await Fusion.findByIdAndDelete(req.params.fusionID)
 	res.redirect('/fusion')
 })
 

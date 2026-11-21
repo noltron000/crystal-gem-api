@@ -25,8 +25,9 @@
 			<div>
 				<input
 					id='{{this._id}}'
-					name='{{this._id}}'
+					name='gems[]' {{!-- Express parses this bracketed name as an array. --}}
 					type='checkbox'
+					value='{{this._id}}'
 				/>
 				<label for='{{this._id}}'>
 					{{this.name}}

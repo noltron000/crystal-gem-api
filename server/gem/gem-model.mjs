@@ -8,12 +8,6 @@ const GemSchema = new Schema({
 		required: true,
 		unique: true,
 	},
-	fusions: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Fusion',
-		},
-	],
 	weapon: {
 		type: String,
 		required: true,
@@ -22,6 +16,12 @@ const GemSchema = new Schema({
 		type: String,
 		required: true,
 	},
+})
+
+GemSchema.virtual('fusions', {
+	ref: 'Fusion',
+	localField: '_id',
+	foreignField: 'gems',
 })
 
 export default mongoose.model('Gem', GemSchema)
