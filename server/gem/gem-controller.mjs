@@ -74,7 +74,7 @@ router.get('/:gemID/json', (req, res) => {
 		.then((gem) => {
 			res // here's where SHOW JSON differs
 				.json({
-					message: 'Show this fusion with the gems who create it',
+					message: 'Show this gem with the fusions it creates',
 					gem,
 				})
 				.status(200)
