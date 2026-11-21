@@ -1,7 +1,31 @@
 import express from 'express'
+import mongoose from 'mongoose'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
 import { serialize } from '../utils/serialize.mjs'
+
+const validateGemIDs = async (gemIDs) => {
+	if (gemIDs === undefined) return []
+	if (!Array.isArray(gemIDs)) return null
+
+	const hasInvalidGemID = gemIDs.some((gemID) => (
+		typeof gemID !== 'string'
+		|| !mongoose.isObjectIdOrHexString(gemID)
+	))
+	if (hasInvalidGemID) return null
+
+	// Normalize IDs and remove duplicate selections.
+	gemIDs = gemIDs.map((gemID) => gemID.toLowerCase())
+	const uniqueGemIDs = [...new Set(gemIDs)]
+	if (uniqueGemIDs.length === 0) return []
+
+	// Confirm that every selected ID belongs to an existing gem.
+	const existingGemCount = await Gem.countDocuments({
+		_id: { $in: uniqueGemIDs },
+	})
+	if (existingGemCount !== uniqueGemIDs.length) return null
+	return uniqueGemIDs
+}
 
 const router = new express.Router()
 router.get('/', async (req, res) => {
@@ -27,11 +51,17 @@ router.get('/new', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	// Create a fusion and its gem relationships.
+	const gemIDs = await validateGemIDs(req.body.gems)
+	if (gemIDs === null) {
+		return res
+			.status(400)
+			.send('The selected gems are invalid or no longer exist.')
+	}
 	const fusionBody = {
 		name: req.body.name,
 		weapon: req.body.weapon,
 		power: req.body.power,
-		gems: req.body.gems ?? [],
+		gems: gemIDs,
 	}
 	const fusion = new Fusion(fusionBody)
 	await fusion.save()
@@ -73,11 +103,17 @@ router.get('/:fusionID/edit', async (req, res) => {
 
 router.put('/:fusionID', async (req, res) => {
 	// Update a fusion and its gem relationships.
+	const gemIDs = await validateGemIDs(req.body.gems)
+	if (gemIDs === null) {
+		return res
+			.status(400)
+			.send('The selected gems are invalid or no longer exist.')
+	}
 	const fusionBody = {
 		name: req.body.name,
 		weapon: req.body.weapon,
 		power: req.body.power,
-		gems: req.body.gems ?? [],
+		gems: gemIDs,
 	}
 	const fusion = await Fusion.findByIdAndUpdate(
 		req.params.fusionID,
