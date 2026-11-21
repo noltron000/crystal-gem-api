@@ -1,38 +1,55 @@
 <h2>Edit {{gem.name}}</h2>
 
 <!-- Create Gem Form -->
-<form action='/gem/{{gem._id}}?_method=PUT' method='post'>
+<form
+	action='/gem/{{gem._id}}?_method=PUT'
+	method='post'
+>
 
 	<fieldset>
-		<legend>
-			Basics
-		</legend>
+		<legend>Basics</legend>
 
 		<div>
 			<label for='name'>
 				Gem
-			</label><br />
-			<input type='text' name='name' id='name' value='{{gem.name}}' />
+			</label>
+			<br />
+			<input
+				type='text'
+				name='name'
+				id='name'
+				value='{{gem.name}}'
+			/>
 		</div>
 	</fieldset>
 
 	<fieldset>
-		<legend>
-			Abilities
-		</legend>
+		<legend>Abilities</legend>
 
 		<div>
 			<label for='weapon'>
 				Signature Weapon
-			</label><br />
-			<input type='text' name='weapon' id='weapon' value='{{gem.weapon}}' />
+			</label>
+			<br />
+			<input
+				type='text'
+				name='weapon'
+				id='weapon'
+				value='{{gem.weapon}}'
+			/>
 		</div>
 
 		<div>
 			<label for='power'>
 				Secret Power
-			</label><br />
-			<input type='text' name='power' id='power' value='{{gem.power}}' />
+			</label>
+			<br />
+			<input
+				type='text'
+				name='power'
+				id='power'
+				value='{{gem.power}}'
+			/>
 		</div>
 
 	</fieldset>
@@ -41,6 +58,11 @@
 	</button>
 </form>
 
-<form action='/gem/{{gem._id}}?_method=DELETE' method='post'>
-	<button type="submit">Delete</button>
+<form
+	action='/gem/{{gem._id}}?_method=DELETE'
+	method='post'
+>
+	<button type='submit'>
+		Delete
+	</button>
 </form>

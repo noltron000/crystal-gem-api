@@ -1,48 +1,66 @@
 <h2>Create a fusion</h2>
 
 <!-- Create Fusion Form -->
-<form action='/fusion' method='post'>
+<form
+	action='/fusion'
+	method='post'
+>
 
 	<fieldset>
-		<legend>
-			Basics
-		</legend>
+		<legend>Basics</legend>
 
 		<div>
 			<label for='name'>
 				Fusion Gem
-			</label><br />
-			<input type='text' name='name' id='name' />
+			</label>
+			<br />
+			<input
+				type='text'
+				name='name'
+				id='name'
+			/>
 		</div>
 
 		{{#each gems}}
-		<div>
-			<input type='checkbox' name='{{this._id}}' id='{{this._id}}' />
-			<label for='{{this._id}}'>
-				{{this.name}}
-			</label>
-		</div>
+			<div>
+				<input
+					type='checkbox'
+					name='{{this._id}}'
+					id='{{this._id}}'
+				/>
+				<label for='{{this._id}}'>
+					{{this.name}}
+				</label>
+			</div>
 		{{/each}}
 
 	</fieldset>
 
 	<fieldset>
-		<legend>
-			Abilities
-		</legend>
+		<legend>Abilities</legend>
 
 		<div>
 			<label for='weapon'>
 				Signature Weapon
-			</label><br />
-			<input type='text' name='weapon' id='weapon' />
+			</label>
+			<br />
+			<input
+				type='text'
+				name='weapon'
+				id='weapon'
+			/>
 		</div>
 
 		<div>
 			<label for='power'>
 				Secret Power
-			</label><br />
-			<input type='text' name='power' id='power' />
+			</label>
+			<br />
+			<input
+				type='text'
+				name='power'
+				id='power'
+			/>
 		</div>
 
 	</fieldset>
