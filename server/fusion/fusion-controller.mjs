@@ -5,12 +5,10 @@ import { serialize } from '../utils/serialize.mjs'
 
 const router = new express.Router()
 router.get('/', (req, res) => {
-	// DONE: INDEX //
-	// indexes all fusions
+	// Fetch and render all fusions.
 	Fusion.find({})
 		.then((fusions) => {
-			res // here's where INDEX differs
-				.render('fusion-index', { fusions: serialize(fusions) })
+			res.render('fusion-index', { fusions: serialize(fusions) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -18,15 +16,13 @@ router.get('/', (req, res) => {
 })
 
 router.get('/json', (req, res) => {
-	// DONE: INDEX JSON //
-	// indexes all fusions and returns json
+	// Fetch and return all fusions as JSON.
 	Fusion.find({})
 		.then((fusions) => {
-			res // here's where INDEX JSON differs
-				.json({
-					message: 'Get all fusions',
-					fusions,
-				})
+			res.json({
+				message: 'Get all fusions.',
+				fusions,
+			})
 				.status(200)
 		})
 		.catch((err) => {
@@ -35,8 +31,7 @@ router.get('/json', (req, res) => {
 })
 
 router.get('/new', (req, res) => {
-	// DONE: NEW //
-	// shows a fusion creation form
+	// Fetch all gems and render fusion creation form.
 	Gem.find({})
 		.then((gems) => {
 			res.render('fusion-new.hbs', { gems: serialize(gems) })
@@ -47,11 +42,10 @@ router.get('/new', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-	// DONE: CREATE //
-	// creates a new fusion
+	// Create fusion and establish relationships with gems.
 	const fusionBody = req.body
 	fusionBody.gems = []
-	// give gemIDs to fusion, in array
+	// Extract checked gem IDs from form.
 	for (const key in fusionBody) {
 		if (fusionBody[key] === 'on') {
 			fusionBody.gems.push(key)
@@ -61,7 +55,7 @@ router.post('/', (req, res) => {
 	fusion
 		.save()
 		.then(() => {
-			// give fusionID to gems, in array
+			// Add new fusion to each associated gem.
 			for (const key in fusionBody) {
 				if (fusionBody[key] === 'on') {
 					Gem.findById(key).then((gem) => {
@@ -78,13 +72,11 @@ router.post('/', (req, res) => {
 })
 
 router.get('/:fusionID', (req, res) => {
-	// DONE: SHOW //
-	// shows a single fusion in detail
+	// Fetch and render fusion detail with related gems.
 	Fusion.findById(req.params.fusionID)
 		.populate('gems')
 		.then((fusion) => {
-			res // here's where SHOW differs
-				.render('fusion-show.hbs', { fusion: serialize(fusion) })
+			res.render('fusion-show.hbs', { fusion: serialize(fusion) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -92,16 +84,13 @@ router.get('/:fusionID', (req, res) => {
 })
 
 router.get('/:fusionID/json', (req, res) => {
-	// DONE: SHOW JSON //
-	// shows a single fusion in detail
+	// Fetch and return fusion detail as JSON.
 	Fusion.findById(req.params.fusionID)
-		// .populate('gems')
 		.then((fusion) => {
-			res // here's where SHOW JSON differs
-				.json({
-					message: 'Show this fusion with the gems who create it',
-					fusion,
-				})
+			res.json({
+				message: 'Show this fusion with the gems who create it.',
+				fusion,
+			})
 				.status(200)
 		})
 		.catch((err) => {
@@ -110,19 +99,11 @@ router.get('/:fusionID/json', (req, res) => {
 })
 
 router.get('/:fusionID/edit', (req, res) => {
-	// DONE: EDIT //
-	// shows a fusion edit form
+	// Fetch all gems and render fusion edit form.
 	Gem.find({})
 		.then((gems) => {
 			Fusion.findById(req.params.fusionID)
 				.then((fusion) => {
-					//////////////// PROBLEMS ARE HAPPENING
-					// console.log(fusion.gems)
-					// gems.forEach(gem => {
-					// 	console.log(gem._id.toString())
-					// 	console.log(fusion.gems.filter(fuseGemID => gem._id.toString() === fuseGemID))
-					// });
-					//////////////// END PROBLEMS
 					res.render('fusion-edit', { fusion: serialize(fusion), gems: serialize(gems) })
 				})
 				.catch((err) => {
@@ -135,10 +116,10 @@ router.get('/:fusionID/edit', (req, res) => {
 })
 
 router.put('/:fusionID', (req, res) => {
-	// DONE: UPDATE //
+	// Update fusion and gem relationships.
 	const fusionBody = req.body
 	fusionBody.gems = []
-	// give gemIDs to fusion, in array
+	// Extract checked gem IDs from form.
 	for (const key in fusionBody) {
 		if (fusionBody[key] === 'on') {
 			fusionBody.gems.push(key)
@@ -162,7 +143,7 @@ router.put('/:fusionID', (req, res) => {
 })
 
 router.delete('/:fusionID', (req, res) => {
-	// DONE: DELETE //
+	// Delete fusion.
 	Fusion.findByIdAndDelete(req.params.fusionID)
 		.then(() => {
 			res.redirect('/fusion')
