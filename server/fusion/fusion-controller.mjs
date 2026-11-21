@@ -104,7 +104,18 @@ router.get('/:fusionID/edit', (req, res) => {
 		.then((gems) => {
 			Fusion.findById(req.params.fusionID)
 				.then((fusion) => {
-					res.render('fusion-edit', { fusion: serialize(fusion), gems: serialize(gems) })
+					const selectedGemIds = new Set(
+						fusion.gems.map((gemId) => gemId.toString()),
+					)
+					const serializedGems = serialize(gems).map((gem) => {
+						const selected = selectedGemIds.has(gem._id.toString())
+						// We can also track if the gem is selected or not.
+						return {...gem, selected}
+					})
+					res.render('fusion-edit', {
+						fusion: serialize(fusion),
+						gems: serializedGems,
+					})
 				})
 				.catch((err) => {
 					console.error(err)
