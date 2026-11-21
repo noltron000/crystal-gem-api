@@ -1,5 +1,6 @@
 import express from 'express'
 import Gem from '../gem/gem-model.mjs'
+import { serialize } from '../utils/serialize.mjs'
 
 const router = new express.Router()
 router.get('/', (req, res) => {
@@ -8,7 +9,7 @@ router.get('/', (req, res) => {
 	Gem.find({})
 		.then((gems) => {
 			res // here's where INDEX differs
-				.render('gem-index', { gems })
+				.render('gem-index', { gems: serialize(gems) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -59,7 +60,7 @@ router.get('/:gemID', (req, res) => {
 		.populate('fusions')
 		.then((gem) => {
 			res // here's where SHOW differs
-				.render('gem-show.hbs', { gem })
+				.render('gem-show.hbs', { gem: serialize(gem) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -89,7 +90,7 @@ router.get('/:gemID/edit', (req, res) => {
 	// shows a gem edit form
 	Gem.findById(req.params.gemID)
 		.then((gem) => {
-			res.render('gem-edit', { gem })
+			res.render('gem-edit', { gem: serialize(gem) })
 		})
 		.catch((err) => {
 			console.error(err)

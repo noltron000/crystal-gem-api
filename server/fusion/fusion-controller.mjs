@@ -1,6 +1,7 @@
 import express from 'express'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
+import { serialize } from '../utils/serialize.mjs'
 
 const router = new express.Router()
 router.get('/', (req, res) => {
@@ -9,7 +10,7 @@ router.get('/', (req, res) => {
 	Fusion.find({})
 		.then((fusions) => {
 			res // here's where INDEX differs
-				.render('fusion-index', { fusions })
+				.render('fusion-index', { fusions: serialize(fusions) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -38,7 +39,7 @@ router.get('/new', (req, res) => {
 	// shows a fusion creation form
 	Gem.find({})
 		.then((gems) => {
-			res.render('fusion-new.hbs', { gems })
+			res.render('fusion-new.hbs', { gems: serialize(gems) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -83,7 +84,7 @@ router.get('/:fusionID', (req, res) => {
 		.populate('gems')
 		.then((fusion) => {
 			res // here's where SHOW differs
-				.render('fusion-show.hbs', { fusion })
+				.render('fusion-show.hbs', { fusion: serialize(fusion) })
 		})
 		.catch((err) => {
 			console.error(err)
@@ -122,7 +123,7 @@ router.get('/:fusionID/edit', (req, res) => {
 					// 	console.log(fusion.gems.filter(fuseGemID => gem._id.toString() === fuseGemID))
 					// });
 					//////////////// END PROBLEMS
-					res.render('fusion-edit', { fusion, gems })
+					res.render('fusion-edit', { fusion: serialize(fusion), gems: serialize(gems) })
 				})
 				.catch((err) => {
 					console.error(err)
