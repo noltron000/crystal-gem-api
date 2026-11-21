@@ -4,7 +4,6 @@ import { engine } from 'express-handlebars'
 import cors from 'cors'
 import methodOverride from 'method-override'
 // Import the application routes.
-import auth from '../server/auth/auth-route.mjs'
 import gem from '../server/gem/gem-controller.mjs'
 import fusion from '../server/fusion/fusion-controller.mjs'
 // Create the Express application.
@@ -30,8 +29,7 @@ app.get('/', (req, res) => {
 	res.render('home.hbs')
 })
 
-// Mount the authentication, gem, and fusion routes.
-app.use('/auth', auth)
+// Mount the gem and fusion routes.
 app.use('/gem', gem)
 app.use('/fusion', fusion)
 
