@@ -1,5 +1,6 @@
 import express from 'express'
 import Gem from '../gem/gem-model.mjs'
+import { removeGemReferencesFromFusions } from '../utils/relationships.mjs'
 import { serialize } from '../utils/serialize.mjs'
 
 const router = new express.Router()
@@ -59,7 +60,9 @@ router.put('/:gemID', async (req, res) => {
 
 router.delete('/:gemID', async (req, res) => {
 	// Delete a gem.
-	await Gem.findByIdAndDelete(req.params.gemID)
+	const gemID = req.params.gemID
+	await Gem.findByIdAndDelete(gemID)
+	await removeGemReferencesFromFusions(gemID)
 	res.redirect('/gem')
 })
 

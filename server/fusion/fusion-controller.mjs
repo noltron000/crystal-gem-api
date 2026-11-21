@@ -1,6 +1,7 @@
 import express from 'express'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
+import { syncFusionGemReferences } from '../utils/relationships.mjs'
 import { serialize } from '../utils/serialize.mjs'
 
 const router = new express.Router()
@@ -37,12 +38,7 @@ router.post('/', async (req, res) => {
 	}
 	const fusion = new Fusion(fusionBody)
 	await fusion.save()
-	// Add the new fusion to each associated gem.
-	for (const gemID of fusionBody.gems) {
-		const gem = await Gem.findById(gemID)
-		gem.fusions.push(fusion._id)
-		await gem.save()
-	}
+	await syncFusionGemReferences(fusion._id, fusionBody.gems)
 	res.redirect('/fusion')
 })
 
@@ -93,17 +89,15 @@ router.put('/:fusionID', async (req, res) => {
 		req.params.fusionID,
 		fusionBody,
 	)
-	for (const gemID of fusionBody.gems) {
-		const gem = await Gem.findById(gemID)
-		gem.fusions.push(fusion._id)
-		await gem.save()
-	}
+	await syncFusionGemReferences(fusion._id, fusionBody.gems)
 	res.redirect(`/fusion/${fusion._id}`)
 })
 
 router.delete('/:fusionID', async (req, res) => {
 	// Delete a fusion.
-	await Fusion.findByIdAndDelete(req.params.fusionID)
+	const fusionID = req.params.fusionID
+	await Fusion.findByIdAndDelete(fusionID)
+	await syncFusionGemReferences(fusionID, [])
 	res.redirect('/fusion')
 })
 
