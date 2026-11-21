@@ -11,11 +11,10 @@ const debug = createDebug('auth-api-starterpack:index')
 
 // connect to mongo db
 const mongoUri = process.env.MONGODB_URI || config.mongo.host
-mongoose.connect(mongoUri)
-
 mongoose.connection.on('error', () => {
 	throw new Error(`unable to connect to database: ${mongoUri}`)
 })
+await mongoose.connect(mongoUri)
 
 // print mongoose logs in dev env
 if (config.mongooseDebug) {
