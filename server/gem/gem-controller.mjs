@@ -23,6 +23,28 @@ const serializeGem = (gem) => ({
 	fusions: serialize(gem.fusions),
 })
 
+const runWithDuplicateGemNameHandling = async (operation) => {
+	try {
+		return await operation()
+	} catch (err) {
+		if (isDuplicateNameError(err)) throw new GemDuplicateNameError()
+		else throw err
+	}
+}
+
+const assertValidGemID = (gemID) => {
+	if (!mongoose.isObjectIdOrHexString(gemID)) {
+		throw new GemInvalidIDError()
+	}
+}
+
+const findGemOrThrow = async (gemID) => {
+	assertValidGemID(gemID)
+	const gem = await Gem.findById(gemID)
+	if (!gem) throw new GemNotFoundError()
+	return gem
+}
+
 const router = new express.Router()
 router.get('/', async (req, res) => {
 	// Fetch and render all gems.
@@ -47,34 +69,21 @@ router.get('/new', (req, res) => {
 router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Create and save a new gem.
 	const gem = new Gem(req.body)
-	try {
-		await gem.save()
-	} catch (err) {
-		if (isDuplicateNameError(err)) {
-			throw new GemDuplicateNameError()
-		}
-		throw err
-	}
+	await runWithDuplicateGemNameHandling(() => gem.save())
 	res.redirect('/gem')
 })
 
 router.get('/:gemID', async (req, res) => {
 	// Fetch and render a gem with its related fusions.
-	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
-		throw new GemInvalidIDError()
-	}
-	const gem = await Gem.findById(req.params.gemID).populate('fusions')
-	if (!gem) throw new GemNotFoundError()
+	const gem = await findGemOrThrow(req.params.gemID)
+	await gem.populate('fusions')
 	res.render('gem-show.hbs', { gem: serializeGem(gem) })
 })
 
 router.get('/:gemID/json', async (req, res) => {
 	// Fetch and return the gem details as JSON.
-	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
-		throw new GemInvalidIDError()
-	}
-	const gem = await Gem.findById(req.params.gemID).populate('fusions')
-	if (!gem) throw new GemNotFoundError()
+	const gem = await findGemOrThrow(req.params.gemID)
+	await gem.populate('fusions')
 	res.status(200).json({
 		message: 'Show this gem with the fusions it creates.',
 		gem: serializeGem(gem),
@@ -83,33 +92,21 @@ router.get('/:gemID/json', async (req, res) => {
 
 router.get('/:gemID/edit', async (req, res) => {
 	// Fetch and render the gem edit form.
-	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
-		throw new GemInvalidIDError()
-	}
-	const gem = await Gem.findById(req.params.gemID)
-	if (!gem) throw new GemNotFoundError()
+	const gem = await findGemOrThrow(req.params.gemID)
 	res.render('gem-edit', { gem: serialize(gem) })
 })
 
 router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Update a gem with the submitted data.
-	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
-		throw new GemInvalidIDError()
-	}
+	assertValidGemID(req.params.gemID)
 
-	let gem
-	try {
-		gem = await Gem.findByIdAndUpdate(
+	const gem = await runWithDuplicateGemNameHandling(() => (
+		Gem.findByIdAndUpdate(
 			req.params.gemID,
 			req.body,
 			{ runValidators: true },
 		)
-	} catch (err) {
-		if (isDuplicateNameError(err)) {
-			throw new GemDuplicateNameError()
-		}
-		throw err
-	}
+	))
 
 	if (!gem) throw new GemNotFoundError()
 	res.redirect(`/gem/${gem._id}`)
@@ -117,9 +114,7 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 
 router.delete('/:gemID', async (req, res) => {
 	// Delete a gem.
-	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
-		throw new GemInvalidIDError()
-	}
+	assertValidGemID(req.params.gemID)
 	const gemID = req.params.gemID
 	const gem = await Gem.findByIdAndDelete(gemID)
 	if (!gem) throw new GemNotFoundError()

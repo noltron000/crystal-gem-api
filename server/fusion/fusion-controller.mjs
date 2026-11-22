@@ -20,26 +20,61 @@ const fusionBodySchema = Joi.object({
 	gems: Joi.array().items(Joi.string()).default([]),
 })
 
+const runWithDuplicateFusionNameHandling = async (operation) => {
+	try {
+		return await operation()
+	} catch (err) {
+		if (isDuplicateNameError(err)) throw new FusionDuplicateNameError()
+		else throw err
+	}
+}
+
+const assertValidFusionID = (fusionID) => {
+	if (!mongoose.isObjectIdOrHexString(fusionID)) {
+		throw new FusionInvalidIDError()
+	}
+}
+
+const findFusionOrThrow = async (fusionID) => {
+	assertValidFusionID(fusionID)
+	const fusion = await Fusion.findById(fusionID)
+	if (!fusion) throw new FusionNotFoundError()
+	return fusion
+}
+
 const validateGemIDs = async (gemIDs) => {
-	if (gemIDs === undefined) return []
-	if (!Array.isArray(gemIDs)) return null
+	if (gemIDs === undefined) {
+		return []
+	}
+	if (!Array.isArray(gemIDs)) {
+		throw new FusionInvalidGemsError()
+	}
 
 	const hasInvalidGemID = gemIDs.some((gemID) => (
 		typeof gemID !== 'string'
 		|| !mongoose.isObjectIdOrHexString(gemID)
 	))
-	if (hasInvalidGemID) return null
+	if (hasInvalidGemID) {
+		throw new FusionInvalidGemsError()
+	}
 
 	// Normalize IDs and remove duplicate selections.
 	gemIDs = gemIDs.map((gemID) => gemID.toLowerCase())
 	const uniqueGemIDs = [...new Set(gemIDs)]
-	if (uniqueGemIDs.length === 0) return []
+	if (uniqueGemIDs.length === 0) {
+		return []
+	}
 
 	// Confirm that every selected ID belongs to an existing gem.
 	const existingGemCount = await Gem.countDocuments({
 		_id: { $in: uniqueGemIDs },
 	})
-	if (existingGemCount !== uniqueGemIDs.length) return null
+	if (existingGemCount !== uniqueGemIDs.length) {
+		throw new FusionInvalidGemsError()
+	}
+
+	// Return this list of unique Gem IDs.
+	// Note, it may have removed duplicates from the original list.
 	return uniqueGemIDs
 }
 
@@ -68,38 +103,21 @@ router.get('/new', async (req, res) => {
 router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Create a fusion and its gem relationships.
 	const gemIDs = await validateGemIDs(req.body.gems)
-	if (gemIDs === null) {
-		throw new FusionInvalidGemsError()
-	}
 	const fusion = new Fusion({ ...req.body, gems: gemIDs })
-	try {
-		await fusion.save()
-	} catch (err) {
-		if (isDuplicateNameError(err)) {
-			throw new FusionDuplicateNameError()
-		}
-		throw err
-	}
+	await runWithDuplicateFusionNameHandling(() => fusion.save())
 	res.redirect('/fusion')
 })
 
 router.get('/:fusionID', async (req, res) => {
 	// Fetch and render a fusion with its related gems.
-	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		throw new FusionInvalidIDError()
-	}
-	const fusion = await Fusion.findById(req.params.fusionID).populate('gems')
-	if (!fusion) throw new FusionNotFoundError()
+	const fusion = await findFusionOrThrow(req.params.fusionID)
+	await fusion.populate('gems')
 	res.render('fusion-show.hbs', { fusion: serialize(fusion) })
 })
 
 router.get('/:fusionID/json', async (req, res) => {
 	// Fetch and return the fusion details as JSON.
-	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		throw new FusionInvalidIDError()
-	}
-	const fusion = await Fusion.findById(req.params.fusionID)
-	if (!fusion) throw new FusionNotFoundError()
+	const fusion = await findFusionOrThrow(req.params.fusionID)
 	res.status(200).json({
 		message: 'Show this fusion with the gems who create it.',
 		fusion,
@@ -108,11 +126,7 @@ router.get('/:fusionID/json', async (req, res) => {
 
 router.get('/:fusionID/edit', async (req, res) => {
 	// Fetch all gems and render the fusion edit form.
-	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		throw new FusionInvalidIDError()
-	}
-	const fusion = await Fusion.findById(req.params.fusionID)
-	if (!fusion) throw new FusionNotFoundError()
+	const fusion = await findFusionOrThrow(req.params.fusionID)
 	const gems = await Gem.find({})
 	const selectedGemIds = new Set(
 		fusion.gems.map((gemId) => (
@@ -132,27 +146,16 @@ router.get('/:fusionID/edit', async (req, res) => {
 
 router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Update a fusion and its gem relationships.
-	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		throw new FusionInvalidIDError()
-	}
+	assertValidFusionID(req.params.fusionID)
 	const gemIDs = await validateGemIDs(req.body.gems)
-	if (gemIDs === null) {
-		throw new FusionInvalidGemsError()
-	}
 
-	let fusion
-	try {
-		fusion = await Fusion.findByIdAndUpdate(
+	const fusion = await runWithDuplicateFusionNameHandling(() => (
+		Fusion.findByIdAndUpdate(
 			req.params.fusionID,
 			{ ...req.body, gems: gemIDs },
 			{ runValidators: true },
 		)
-	} catch (err) {
-		if (isDuplicateNameError(err)) {
-			throw new FusionDuplicateNameError()
-		}
-		throw err
-	}
+	))
 
 	if (!fusion) throw new FusionNotFoundError()
 	res.redirect(`/fusion/${fusion._id}`)
@@ -160,9 +163,7 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 
 router.delete('/:fusionID', async (req, res) => {
 	// Delete a fusion.
-	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		throw new FusionInvalidIDError()
-	}
+	assertValidFusionID(req.params.fusionID)
 	const fusion = await Fusion.findByIdAndDelete(req.params.fusionID)
 	if (!fusion) throw new FusionNotFoundError()
 	res.redirect('/fusion')
