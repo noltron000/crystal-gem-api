@@ -23,6 +23,7 @@ const serializeGem = (gem) => ({
 	fusions: serialize(gem.fusions),
 })
 
+/** Translate duplicate-name database errors into gem HTTP errors; rethrow other errors. */
 const runWithDuplicateGemNameHandling = async (operation) => {
 	try {
 		return await operation()

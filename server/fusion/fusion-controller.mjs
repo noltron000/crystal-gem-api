@@ -20,6 +20,7 @@ const fusionBodySchema = Joi.object({
 	gems: Joi.array().items(Joi.string()).default([]),
 })
 
+/** Translate duplicate-name database errors into fusion HTTP errors; rethrow other errors. */
 const runWithDuplicateFusionNameHandling = async (operation) => {
 	try {
 		return await operation()
@@ -42,6 +43,7 @@ const findFusionOrThrow = async (fusionID) => {
 	return fusion
 }
 
+/** Return unique, normalized IDs for existing gems, or throw if any selection is invalid. */
 const validateGemIDs = async (gemIDs) => {
 	if (gemIDs === undefined) {
 		return []
