@@ -1,47 +1,70 @@
 <h2>Edit {{fusion.name}}</h2>
 
-{{!-- Create Fusion Form --}}
-<form action='/fusion/{{fusion._id}}?_method=PUT' method='post'>
+{{!-- Add the "Edit Fusion" form. --}}
+<form
+	action='/fusion/{{fusion._id}}?_method=PUT'
+	method='post'
+>
 
 	<fieldset>
-		<legend>
-			Basics
-		</legend>
+		<legend>Basics</legend>
 
 		<div>
 			<label for='name'>
 				Fusion Gem
-			</label><br />
-			<input type='text' name='name' id='name' value='{{fusion.name}}' />
+			</label>
+			<br />
+			<input
+				id='name'
+				name='name'
+				type='text'
+				value='{{fusion.name}}'
+			/>
 		</div>
 
 		{{#each gems}}
-		<div>
-			<input type='checkbox' name='{{this._id}}' id='{{this._id}}' />
-			<label for='{{this._id}}'>
-				{{this.name}}
-			</label>
-		</div>
+			<div>
+				<input
+					id='{{this._id}}'
+					name='gems[]' {{!-- Express parses this bracketed name as an array. --}}
+					type='checkbox'
+					value='{{this._id}}'
+					{{#if this.selected}}checked{{/if}}
+				/>
+				<label for='{{this._id}}'>
+					{{this.name}}
+				</label>
+			</div>
 		{{/each}}
 	</fieldset>
 
 	<fieldset>
-		<legend>
-			Abilities
-		</legend>
+		<legend>Abilities</legend>
 
 		<div>
 			<label for='weapon'>
 				Signature Weapon
-			</label><br />
-			<input type='text' name='weapon' id='weapon' value='{{fusion.weapon}}' />
+			</label>
+			<br />
+			<input
+				id='weapon'
+				name='weapon'
+				type='text'
+				value='{{fusion.weapon}}'
+			/>
 		</div>
 
 		<div>
 			<label for='power'>
 				Secret Power
-			</label><br />
-			<input type='text' name='power' id='power' value='{{fusion.power}}' />
+			</label>
+			<br />
+			<input
+				id='power'
+				name='power'
+				type='text'
+				value='{{fusion.power}}'
+			/>
 		</div>
 
 	</fieldset>
@@ -51,6 +74,11 @@
 
 </form>
 
-<form action='/fusion/{{fusion._id}}?_method=DELETE' method='post'>
-	<button type="submit">Delete</button>
+<form
+	action='/fusion/{{fusion._id}}?_method=DELETE'
+	method='post'
+>
+	<button type='submit'>
+		Delete
+	</button>
 </form>

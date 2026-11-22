@@ -1,31 +1,9 @@
 {
-	"name": "auth-api-starterpack",
-	"version": "1.0.0",
-	"description": "A Boilerplate application for building REST APIs using express, mongoose in ES6 with code coverage",
-	"author": "Dani Roxberry <dani@makeschool.com>",
-	"main": "index.js",
+	"name": "crystal-gem-api",
 	"private": false,
-	"engines": {
-		"node": ">=8.10.0",
-		"npm": ">=5.6.0",
-		"yarn": ">=1.5.1"
-	},
-	"scripts": {
-		"start": "node index.js",
-		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
-		"lint": "esw *.js server config --color",
-		"lint:watch": "yarn lint -- --watch",
-		"precommit": "yarn lint && yarn test",
-		"test": "cross-env NODE_ENV=test ./node_modules/.bin/mocha --ui bdd --reporter spec --colors server --recursive",
-		"test:watch": "yarn test -- --watch",
-		"test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _mocha -- --ui bdd --reporter spec --colors server --recursive",
-		"test:check-coverage": "yarn test:coverage && istanbul check-coverage",
-		"report-coverage": "coveralls < ./coverage/lcov.info"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:droxey/auth-api-starterpack.git"
-	},
+	"license": "MIT",
+	"version": "1.0.0",
+	"description": "An API for tracking Crystal Gems, Gem Fusions, and Gemsonas.",
 	"keywords": [
 		"express",
 		"node",
@@ -34,7 +12,7 @@
 		"mongoose",
 		"es6",
 		"mocha",
-		"istanbul",
+		"nyc",
 		"REST",
 		"API",
 		"boilerplate",
@@ -42,42 +20,84 @@
 		"authenticated",
 		"MVC"
 	],
+	"homepage": "https://projects.nebuloid.dev/crystal-gem-api",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/noltron000/crystal-gem-api.git"
+	},
+	"bugs": {
+		"email": "noltron000@gmail.com",
+		"url": "https://github.com/noltron000/crystal-gem-api/issues"
+	},
+	"authors": [
+		{
+			"name": "Nolan Kovacik",
+			"email": "noltron000@gmail.com",
+			"url": "https://nebuloid.dev/"
+		},
+		{
+			"name": "Dani Roxberry",
+			"email": "dani@makeschool.com",
+			"url": "https://droxey.com/"
+		}
+	],
+	"engines": {
+		"node": ">=26.0.0",
+		"npm": ">=5.6.0",
+		"yarn": ">=1.5.1"
+	},
+	"type": "module",
+	"main": "index.mjs",
+	"files": [],
+	"scripts": {
+		"start": "node index.mjs",
+		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
+		"lint": "prettier --check *.mjs server config",
+		"precommit": "yarn lint && yarn test",
+		"prepare": "husky",
+		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
+		"test:watch": "yarn test -- --watch",
+		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
+		"test:check-coverage": "yarn test:coverage && c8 check-coverage"
+	},
 	"dependencies": {
-		"body-parser": "1.18.2",
-		"cors": "2.8.4",
-		"debug": "^2.4.5",
-		"docsify-cli": "4.2.1",
-		"dotenv": "^4.0.0",
-		"express": "false4.16.4",
-		"express-handlebars": "false3.0.0",
-		"express-jwt": "5.3.1",
-		"http-status": "1.0.1",
-		"joi": "10.6.0",
-		"jsonwebtoken": "7.1.9",
-		"method-override": "^2.3.10",
-		"mongoose": "false5.3.15"
+		"cors": "2.8.6",
+		"debug": "^4.4.3",
+		"dotenv": "^18.0.10",
+		"express": "5.3.0",
+		"express-handlebars": "9.0.6",
+		"joi": "18.3.2",
+		"method-override": "^3.0.0",
+		"mongoose": "9.12.1"
 	},
 	"devDependencies": {
-		"chai": "4.1.2",
-		"commitizen": "^2.9.6",
-		"coveralls": "^3.0.0",
-		"cross-env": "5.1.4",
-		"cz-conventional-changelog": "1.2.0",
-		"eslint": "3.16.1",
-		"eslint-config-airbnb-base": "7.1.0",
-		"eslint-plugin-import": "1.16.0",
-		"eslint-watch": "2.1.14",
-		"husky": "0.14.3",
-		"istanbul": "1.1.0-alpha.1",
-		"mocha": "3.5.0",
-		"supertest": "3.0.0",
-		"supertest-as-promised": "4.0.2",
-		"validate-commit-msg": "^2.14.0"
+		"c8": "12.0.0",
+		"cross-env": "10.1.0",
+		"husky": "9.1.7",
+		"mocha": "12.0.3",
+		"prettier": "3.10.1"
 	},
-	"license": "MIT",
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog"
-		}
+	"resolutions": {
+		"glob": "14.0.6",
+		"minimatch": "11.0.8"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"semi": false
+	},
+	"c8": {
+		"all": true,
+		"exclude": [
+			"dist/**",
+			"coverage/**",
+			"index.mjs"
+		],
+		"reporter": [
+			"lcov"
+		],
+		"branches": 50,
+		"functions": 50,
+		"lines": 50,
+		"statements": 50
 	}
 }

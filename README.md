@@ -1,6 +1,5 @@
 # Steven Universe Gem API
 **Live Website:** https://crystal-gem-api.herokuapp.com/ <br />
-**Docsify Brochure:** https://noltron000.github.io/crystal-gem-api/ <br />
 **GitHub Repository:** https://github.com/noltron000/crystal-gem-api <hr />
 
 This API's goal is to help serve information about gem characters in the Steven Universe cartoon series in a more digestable format. Gem's have fusions and vice versa. Both of these items also have Special Weapons and Secret Powers.
@@ -31,14 +30,15 @@ The API has a modest frontend for ease of use. The website is hosted on Heroku @
 ## Getting Started Locally
 *Here's a step-by-step guide to set this API up locally on your computer.*
 1. Set up project files locally
-	1. Fork <a href="https://github.com/noltron000/BEW-1-2_crystal-gem-api">this repo</a>.
+	1. Fork <a href="https://github.com/noltron000/crystal-gem-api">this repo</a>.
 	1. Open terminal; `cd` into your preferred repo library location
 	1. Clone your new fork into this location
 	1. `cd` into the new clone
 1. Host environment locally
 	1. Run `yarn install` in your terminal instance to initialize requirements
-	1. Run `nodemon` in your terminal to host the website locally
-	1. navigate to `http://localhost:4040/` in a browser of your choice
+	1. Copy `.env.example` to `.env`, set `MONGODB_URI` to your MongoDB connection string, and optionally choose an integer `PORT` (default: `4040`)
+	1. Run `yarn start` in your terminal to host the website locally
+	1. Navigate to `http://localhost:4040/`, or replace `4040` with your configured port
 	1. modify and digest data that you alone can access
 		- TIP: *this data is stored locally on your computer*
 	1. use the apps `/json` routes to retrieve data as you please

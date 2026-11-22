@@ -1,25 +1,26 @@
 <h2>
-	Show {{gems.name}}
-	<a href='/gem/{{gems.id}}/json'>
-		<code>
-		(JSON)
-		</code>
+	Show {{gem.name}}
+	<a href='/gem/{{gem._id}}/json'>
+		<code>(JSON)</code>
 	</a>
 </h2>
 
 <h3>Fusions</h3>
-{{#each gems.fusions}}
-<p>{{this.name}}</p>
+{{#each gem.fusions}}
+	<p>{{this.name}}</p>
 {{/each}}
 
 <h3>Weapons</h3>
-<p>{{gems.weapon}}</p>
+<p>{{gem.weapon}}</p>
 
 <h3>Powers</h3>
-<p>{{gems.power}}</p>
+<p>{{gem.power}}</p>
 
 <h4>
-	<a href='/gem/{{gems.id}}/edit' style="outline:solid">
+	<a
+		href='/gem/{{gem._id}}/edit'
+		style='outline:solid'
+	>
 		Edit
 	</a>
 </h4>
