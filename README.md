@@ -1,58 +1,72 @@
-# Steven Universe Gem API
-**Live Website:** https://crystal-gem-api.herokuapp.com/ <br />
-**GitHub Repository:** https://github.com/noltron000/crystal-gem-api <hr />
+# Steven Universe Crystal Gems API
+*You an visit the app live on the web, hosted at [**projects.nebuloid.dev/crystal-gem-api**](https://projects.nebuloid.dev/crystal-gem-api)!*
 
-This API's goal is to help serve information about gem characters in the Steven Universe cartoon series in a more digestable format. Gem's have fusions and vice versa. Both of these items also have Special Weapons and Secret Powers.
+> Welcome to the Steven Universe Crystal Gems API!
+> This project was made to showcase my proficiency with Mongoose, MongoDB, express, and handlebars.
+> It was a part of a college course covering backend web philosophy and technology.
+> While this app was made back in 2018, I updated it in 2026 so it would run smoothly once again.
+> Give it a spin; I hope you enjoy it!
 
-> *What's Steven Universe? It's a popular cartoon directed by Rebecca Sugar.<br />*
-> *See http://steven-universe.wikia.com/wiki/Steven_Universe_Wiki*
 
-## Using the Website
-The API has a modest frontend for ease of use. The website is hosted on Heroku @ https://crystal-gem-api.herokuapp.com/
+## What are Crystal Gems?
+Gems are characters that, in the Steven Universe series, are powerful humanoids with a light-based body and a gemstone heart.
+They have magic, super-hero powers, and can often conjure weapons from thin air.
+In addition, two gems can fuse into a more powerful character or monster.
 
-### Overview
-| Route              | Functionality                                 |
-|:-------------------|:----------------------------------------------|
-| `/`                | Displays basic information                    |
-| `/gem`             | Displays all gems                             |
-| `/gem/json`        | Displays all gems in `JSON` format            |
-| `/gem/new`         | Displays new gem form                         |
-| `/gem/:id`         | Displays one gem's detail                     |
-| `/gem/:id/json`    | Displays one gem's detail in `JSON` format    |
-| `/gem/:id/edit`    | Displays gem edit form                        |
-| `/fusion`          | Displays all fusions                          |
-| `/fusion/json`     | Displays all fusions in `JSON` format         |
-| `/fusion/new`      | Displays new fusion form                      |
-| `/fusion/:id`      | Displays one fusion's detail                  |
-| `/fusion/:id/json` | Displays one fusion's detail in `JSON` format |
-| `/fusion/:id/edit` | Displays fusion edit form                     |
+Some fans of the community like to create new gem characters, called *"gemsonas"*.
+This API helps track the existing character cast, and create gemsonas.
 
-## Getting Started Locally
-*Here's a step-by-step guide to set this API up locally on your computer.*
-1. Set up project files locally
-	1. Fork <a href="https://github.com/noltron000/crystal-gem-api">this repo</a>.
-	1. Open terminal; `cd` into your preferred repo library location
-	1. Clone your new fork into this location
-	1. `cd` into the new clone
-1. Host environment locally
-	1. Run `yarn install` in your terminal instance to initialize requirements
-	1. Copy `.env.example` to `.env`, set `MONGODB_URI` to your MongoDB connection string, and optionally choose an integer `PORT` (default: `4040`)
-	1. Run `yarn start` in your terminal to host the website locally
-	1. Navigate to `http://localhost:4040/`, or replace `4040` with your configured port
-	1. modify and digest data that you alone can access
-		- TIP: *this data is stored locally on your computer*
-	1. use the apps `/json` routes to retrieve data as you please
+![The Crystal Gems](./assets/crystal-gems.jpg)
 
-## Definitions
-***What are gems?***
-*Gems* are metaphysical beings, and their form is projected from the heart of their existance - their jewel. Unlike people, gems can die many times, don't need to sleep, eat or breath, and have special weapons and secret powers.
+## About the App
+The app stores gems and fusions in MongoDB, including their names, weapons, powers, and relationships.
+Browse and manage records through the web interface, or retrieve collection and detail data through JSON endpoints.
+Forms support creating and editing gems and fusions, including user-created gemsonas.
 
-***What are fusions?***
-*Fusions* are super-powerful combinations of gems, achieved through an extraordinary connection. Their mind and body form into one.
+## Routes
+| Method     | Route                | Function                       |
+| :--------- | :------------------- | :----------------------------- |
+| `GET`      | `/`                  | Display the home page          |
+| `GET`      | `/gem`               | List gems                      |
+| `GET`      | `/gem/json`          | Return all gems as JSON        |
+| `GET`      | `/gem/new`           | Display the new gem form       |
+| `POST`     | `/gem`               | Create a gem                   |
+| `GET`      | `/gem/:id`           | Display a gem                  |
+| `GET`      | `/gem/:id/json`      | Return a gem as JSON           |
+| `GET`      | `/gem/:id/edit`      | Display the gem edit form      |
+| `PUT`      | `/gem/:id`           | Update a gem                   |
+| `DELETE`   | `/gem/:id`           | Delete a gem                   |
+| `GET`      | `/fusion`            | List fusions                   |
+| `GET`      | `/fusion/json`       | Return all fusions as JSON     |
+| `GET`      | `/fusion/new`        | Display the new fusion form    |
+| `POST`     | `/fusion`            | Create a fusion                |
+| `GET`      | `/fusion/:id`        | Display a fusion               |
+| `GET`      | `/fusion/:id/json`   | Return a fusion as JSON        |
+| `GET`      | `/fusion/:id/edit`   | Display the fusion edit form   |
+| `PUT`      | `/fusion/:id`        | Update a fusion                |
+| `DELETE`   | `/fusion/:id`        | Delete a fusion                |
 
-## Aspirations
-In future iterations, it would be nice to include:
-- User provisioning
-- Tests & error handling
-- c8 coverage
-- Husky hooks
+## Local setup
+Requirements: Node.js 26 or later, Yarn, and a MongoDB instance.
+1. Install dependencies with `yarn install`.
+2. Copy `.env.example` to `.env` and set `MONGODB_URI` to your MongoDB connection string. The example uses a local database. `PORT` is optional and defaults to `4040`.
+3. Start the app with `yarn start`.
+4. Open `http://localhost:4040/` (or use your configured port).
+
+## Project structure
+- `source/config/`: environment configuration and Express setup
+- `source/server/gem/` and `source/server/fusion/`: feature-specific controllers, models, and tests
+- `source/server/utils/`: shared server utilities
+- `source/views/`: Handlebars templates
+
+## Development
+- `yarn lint`: check JavaScript formatting
+- `yarn test`: run the Mocha test suite
+- `yarn test:watch`: rerun tests when files change
+
+Test files are present, but test cases have not yet been implemented.
+
+## Future work
+- Add automated tests and improve error handling
+- Add c8 coverage reporting and Husky hooks
+- Add user provisioning
