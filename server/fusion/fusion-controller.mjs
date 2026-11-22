@@ -88,7 +88,9 @@ router.get('/:fusionID/edit', async (req, res) => {
 	const gems = await Gem.find({})
 	const fusion = await Fusion.findById(req.params.fusionID)
 	const selectedGemIds = new Set(
-		fusion.gems.map((gemId) => gemId.toString()),
+		fusion.gems.map((gemId) => (
+			gemId.toString()
+		))
 	)
 	const serializedGems = serialize(gems).map((gem) => {
 		const selected = selectedGemIds.has(gem._id.toString())
