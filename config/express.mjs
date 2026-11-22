@@ -3,6 +3,7 @@ import express from 'express'
 import { engine } from 'express-handlebars'
 import cors from 'cors'
 import methodOverride from 'method-override'
+import { HttpError } from '../server/utils/http-errors.mjs'
 // Import the application routes.
 import gem from '../server/gem/gem-controller.mjs'
 import fusion from '../server/fusion/fusion-controller.mjs'
@@ -32,5 +33,6 @@ app.get('/', (req, res) => {
 // Mount the gem and fusion routes.
 app.use('/gem', gem)
 app.use('/fusion', fusion)
+app.use(HttpError.handle)
 
 export default app

@@ -4,6 +4,12 @@ import Joi from 'joi'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
 import { validateRequestBody } from '../utils/request-validation.mjs'
+import {
+	FusionDuplicateNameError,
+	FusionInvalidGemsError,
+	FusionInvalidIDError,
+	FusionNotFoundError,
+} from '../utils/http-errors.mjs'
 import { serialize } from '../utils/serialize.mjs'
 
 const fusionBodySchema = Joi.object({
@@ -62,16 +68,14 @@ router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Create a fusion and its gem relationships.
 	const gemIDs = await validateGemIDs(req.body.gems)
 	if (gemIDs === null) {
-		return res
-			.status(400)
-			.send('The selected gems are invalid or no longer exist.')
+		throw new FusionInvalidGemsError()
 	}
 	const fusion = new Fusion({ ...req.body, gems: gemIDs })
 	try {
 		await fusion.save()
 	} catch (err) {
 		if (err.code === 11000 && err.keyPattern?.name === 1) {
-			return res.status(409).send('A fusion with that name already exists.')
+			throw new FusionDuplicateNameError()
 		}
 		throw err
 	}
@@ -81,20 +85,20 @@ router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 router.get('/:fusionID', async (req, res) => {
 	// Fetch and render a fusion with its related gems.
 	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		return res.status(400).send('Invalid fusion ID.')
+		throw new FusionInvalidIDError()
 	}
 	const fusion = await Fusion.findById(req.params.fusionID).populate('gems')
-	if (!fusion) return res.status(404).send('Fusion not found.')
+	if (!fusion) throw new FusionNotFoundError()
 	res.render('fusion-show.hbs', { fusion: serialize(fusion) })
 })
 
 router.get('/:fusionID/json', async (req, res) => {
 	// Fetch and return the fusion details as JSON.
 	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		return res.status(400).json({ error: 'Invalid fusion ID.' })
+		throw new FusionInvalidIDError()
 	}
 	const fusion = await Fusion.findById(req.params.fusionID)
-	if (!fusion) return res.status(404).json({ error: 'Fusion not found.' })
+	if (!fusion) throw new FusionNotFoundError()
 	res.status(200).json({
 		message: 'Show this fusion with the gems who create it.',
 		fusion,
@@ -104,10 +108,10 @@ router.get('/:fusionID/json', async (req, res) => {
 router.get('/:fusionID/edit', async (req, res) => {
 	// Fetch all gems and render the fusion edit form.
 	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		return res.status(400).send('Invalid fusion ID.')
+		throw new FusionInvalidIDError()
 	}
 	const fusion = await Fusion.findById(req.params.fusionID)
-	if (!fusion) return res.status(404).send('Fusion not found.')
+	if (!fusion) throw new FusionNotFoundError()
 	const gems = await Gem.find({})
 	const selectedGemIds = new Set(
 		fusion.gems.map((gemId) => (
@@ -128,13 +132,11 @@ router.get('/:fusionID/edit', async (req, res) => {
 router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Update a fusion and its gem relationships.
 	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		return res.status(400).send('Invalid fusion ID.')
+		throw new FusionInvalidIDError()
 	}
 	const gemIDs = await validateGemIDs(req.body.gems)
 	if (gemIDs === null) {
-		return res
-			.status(400)
-			.send('The selected gems are invalid or no longer exist.')
+		throw new FusionInvalidGemsError()
 	}
 	let fusion
 	try {
@@ -145,21 +147,21 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 		)
 	} catch (err) {
 		if (err.code === 11000 && err.keyPattern?.name === 1) {
-			return res.status(409).send('A fusion with that name already exists.')
+			throw new FusionDuplicateNameError()
 		}
 		throw err
 	}
-	if (!fusion) return res.status(404).send('Fusion not found.')
+	if (!fusion) throw new FusionNotFoundError()
 	res.redirect(`/fusion/${fusion._id}`)
 })
 
 router.delete('/:fusionID', async (req, res) => {
 	// Delete a fusion.
 	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
-		return res.status(400).send('Invalid fusion ID.')
+		throw new FusionInvalidIDError()
 	}
 	const fusion = await Fusion.findByIdAndDelete(req.params.fusionID)
-	if (!fusion) return res.status(404).send('Fusion not found.')
+	if (!fusion) throw new FusionNotFoundError()
 	res.redirect('/fusion')
 })
 
