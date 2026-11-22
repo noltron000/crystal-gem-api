@@ -8,6 +8,7 @@ import {
 	GemDuplicateNameError,
 	GemInvalidIDError,
 	GemNotFoundError,
+	isDuplicateNameError,
 } from '../utils/http-errors.mjs'
 import { serialize } from '../utils/serialize.mjs'
 
@@ -49,7 +50,7 @@ router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 	try {
 		await gem.save()
 	} catch (err) {
-		if (err.code === 11000 && err.keyPattern?.name === 1) {
+		if (isDuplicateNameError(err)) {
 			throw new GemDuplicateNameError()
 		}
 		throw err
@@ -95,6 +96,7 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
 		throw new GemInvalidIDError()
 	}
+
 	let gem
 	try {
 		gem = await Gem.findByIdAndUpdate(
@@ -103,11 +105,12 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 			{ runValidators: true },
 		)
 	} catch (err) {
-		if (err.code === 11000 && err.keyPattern?.name === 1) {
+		if (isDuplicateNameError(err)) {
 			throw new GemDuplicateNameError()
 		}
 		throw err
 	}
+
 	if (!gem) throw new GemNotFoundError()
 	res.redirect(`/gem/${gem._id}`)
 })

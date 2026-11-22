@@ -9,6 +9,7 @@ import {
 	FusionInvalidGemsError,
 	FusionInvalidIDError,
 	FusionNotFoundError,
+	isDuplicateNameError,
 } from '../utils/http-errors.mjs'
 import { serialize } from '../utils/serialize.mjs'
 
@@ -74,7 +75,7 @@ router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 	try {
 		await fusion.save()
 	} catch (err) {
-		if (err.code === 11000 && err.keyPattern?.name === 1) {
+		if (isDuplicateNameError(err)) {
 			throw new FusionDuplicateNameError()
 		}
 		throw err
@@ -138,6 +139,7 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 	if (gemIDs === null) {
 		throw new FusionInvalidGemsError()
 	}
+
 	let fusion
 	try {
 		fusion = await Fusion.findByIdAndUpdate(
@@ -146,11 +148,12 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 			{ runValidators: true },
 		)
 	} catch (err) {
-		if (err.code === 11000 && err.keyPattern?.name === 1) {
+		if (isDuplicateNameError(err)) {
 			throw new FusionDuplicateNameError()
 		}
 		throw err
 	}
+
 	if (!fusion) throw new FusionNotFoundError()
 	res.redirect(`/fusion/${fusion._id}`)
 })
