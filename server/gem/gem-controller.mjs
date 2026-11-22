@@ -2,15 +2,17 @@ import express from 'express'
 import Joi from 'joi'
 import mongoose from 'mongoose'
 import Gem from '../gem/gem-model.mjs'
-import { removeGemReferencesFromFusions } from '../utils/relationships.mjs'
-import { validateRequestBody } from '../utils/request-validation.mjs'
 import {
 	GemDuplicateNameError,
 	GemInvalidIDError,
 	GemNotFoundError,
-	isDuplicateNameError,
 } from '../utils/http-errors.mjs'
-import { serialize } from '../utils/serialize.mjs'
+import {
+	isDuplicateNameError,
+	removeGemReferencesFromFusions,
+	serialize,
+	validateRequestBody,
+} from '../utils/helpers.mjs'
 
 const gemBodySchema = Joi.object({
 	name: Joi.string().required(),

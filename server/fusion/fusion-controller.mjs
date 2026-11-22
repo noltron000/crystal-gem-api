@@ -3,15 +3,17 @@ import mongoose from 'mongoose'
 import Joi from 'joi'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
-import { validateRequestBody } from '../utils/request-validation.mjs'
 import {
 	FusionDuplicateNameError,
 	FusionInvalidGemsError,
 	FusionInvalidIDError,
 	FusionNotFoundError,
-	isDuplicateNameError,
 } from '../utils/http-errors.mjs'
-import { serialize } from '../utils/serialize.mjs'
+import {
+	isDuplicateNameError,
+	serialize,
+	validateRequestBody,
+} from '../utils/helpers.mjs'
 
 const fusionBodySchema = Joi.object({
 	name: Joi.string().required(),

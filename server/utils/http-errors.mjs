@@ -1,10 +1,3 @@
-export const isDuplicateNameError = (err) => (
-	// MongoDB uses error code 11000 for duplicate-key errors.
-	err?.code === 11000
-	// Make sure `err.keyPattern` has the name property.
-	&& Object.hasOwn(err.keyPattern ?? {}, 'name')
-)
-
 export class HttpError extends Error {
 	static handle(err, req, res, next) {
 		if (!(err instanceof HttpError)) return next(err)
