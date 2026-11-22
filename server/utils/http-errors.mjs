@@ -24,6 +24,12 @@ export class GemNotFoundError extends HttpError {
 	}
 }
 
+export class GemReferencedError extends HttpError {
+	constructor() {
+		super(409, 'Cannot delete a gem that belongs to a fusion.')
+	}
+}
+
 export class GemDuplicateNameError extends HttpError {
 	constructor() {
 		super(409, 'A gem with that name already exists.')

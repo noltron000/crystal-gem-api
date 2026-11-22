@@ -1,5 +1,5 @@
 import Fusion from '../fusion/fusion-model.mjs'
-import { HttpError } from './http-errors.mjs'
+import { GemReferencedError, HttpError } from './http-errors.mjs'
 
 export const isDuplicateNameError = (err) => (
 	// MongoDB uses error code 11000 for duplicate-key errors.
@@ -8,8 +8,10 @@ export const isDuplicateNameError = (err) => (
 	&& Object.hasOwn(err.keyPattern ?? {}, 'name')
 )
 
-export const removeGemReferencesFromFusions = async (gemID) => {
-	await Fusion.updateMany({ gems: gemID }, { $pull: { gems: gemID } })
+export const assertGemNotReferenced = async (gemID) => {
+	if (await Fusion.exists({ gems: gemID })) {
+		throw new GemReferencedError()
+	}
 }
 
 /** Validate the body and replace it with Joi's normalized value before continuing. */

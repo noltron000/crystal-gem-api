@@ -8,8 +8,8 @@ import {
 	GemNotFoundError,
 } from '../utils/http-errors.mjs'
 import {
+	assertGemNotReferenced,
 	isDuplicateNameError,
-	removeGemReferencesFromFusions,
 	serialize,
 	validateRequestBody,
 } from '../utils/helpers.mjs'
@@ -116,12 +116,12 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 })
 
 router.delete('/:gemID', async (req, res) => {
-	// Delete a gem.
+	// Delete a gem, but refuse while a fusion references it.
 	assertValidGemID(req.params.gemID)
 	const gemID = req.params.gemID
+	await assertGemNotReferenced(gemID)
 	const gem = await Gem.findByIdAndDelete(gemID)
 	if (!gem) throw new GemNotFoundError()
-	await removeGemReferencesFromFusions(gemID)
 	res.redirect('/gem')
 })
 
