@@ -1,0 +1,11 @@
+name = "crystal-gem-api-proxy"
+main = "worker.mjs"
+compatibility_date = "2026-11-22"
+workers_dev = false
+
+[[routes]]
+pattern = "projects.nebuloid.dev/crystal-gem-api*"
+zone_name = "nebuloid.dev"
+
+[vars]
+RENDER_ORIGIN = "https://crystal-gem-api.onrender.com"

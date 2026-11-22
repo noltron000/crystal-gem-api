@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: crystal-gem-api
+    runtime: node
+    branch: main
+    autoDeploy: true
+    plan: free
+    buildCommand: yarn install --frozen-lockfile
+    startCommand: yarn start
+    healthCheckPath: /crystal-gem-api/
+    envVars:
+      - key: NODE_VERSION
+        value: 26.0.0
+      - key: NODE_ENV
+        value: production
+      - key: PUBLIC_BASE_PATH
+        value: /crystal-gem-api
+      - key: MONGODB_URI
+        sync: false
