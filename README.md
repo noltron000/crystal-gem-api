@@ -1,6 +1,5 @@
 # Steven Universe Gem API
 **Live Website:** https://crystal-gem-api.herokuapp.com/ <br />
-**Docsify Brochure:** https://noltron000.github.io/crystal-gem-api/ <br />
 **GitHub Repository:** https://github.com/noltron000/crystal-gem-api <hr />
 
 This API's goal is to help serve information about gem characters in the Steven Universe cartoon series in a more digestable format. Gem's have fusions and vice versa. Both of these items also have Special Weapons and Secret Powers.
@@ -31,7 +30,7 @@ The API has a modest frontend for ease of use. The website is hosted on Heroku @
 ## Getting Started Locally
 *Here's a step-by-step guide to set this API up locally on your computer.*
 1. Set up project files locally
-	1. Fork <a href="https://github.com/noltron000/BEW-1-2_crystal-gem-api">this repo</a>.
+	1. Fork <a href="https://github.com/noltron000/crystal-gem-api">this repo</a>.
 	1. Open terminal; `cd` into your preferred repo library location
 	1. Clone your new fork into this location
 	1. `cd` into the new clone
