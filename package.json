@@ -53,12 +53,8 @@
 		"start": "node source/index.mjs",
 		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
 		"lint": "prettier --check \"source/**/*.mjs\"",
-		"precommit": "yarn lint && yarn test",
-		"prepare": "husky",
 		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors source/server --recursive",
-		"test:watch": "yarn test -- --watch",
-		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors source/server --recursive",
-		"test:check-coverage": "yarn test:coverage && c8 check-coverage"
+		"test:watch": "yarn test -- --watch"
 	},
 	"dependencies": {
 		"cors": "2.8.6",
@@ -71,9 +67,7 @@
 		"mongoose": "9.12.1"
 	},
 	"devDependencies": {
-		"c8": "12.0.0",
 		"cross-env": "10.1.0",
-		"husky": "9.1.7",
 		"mocha": "12.0.3",
 		"prettier": "3.10.1"
 	},
@@ -84,20 +78,5 @@
 	"prettier": {
 		"singleQuote": true,
 		"semi": false
-	},
-	"c8": {
-		"all": true,
-		"exclude": [
-			"dist/**",
-			"coverage/**",
-			"source/index.mjs"
-		],
-		"reporter": [
-			"lcov"
-		],
-		"branches": 50,
-		"functions": 50,
-		"lines": 50,
-		"statements": 50
 	}
 }

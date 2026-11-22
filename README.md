@@ -54,3 +54,5 @@ The API has a modest frontend for ease of use. The website is hosted on Heroku @
 In future iterations, it would be nice to include:
 - User provisioning
 - Tests & error handling
+- c8 coverage
+- Husky hooks
