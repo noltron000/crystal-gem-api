@@ -10,11 +10,18 @@ import createDebug from 'debug'
 const debug = createDebug('auth-api-starterpack:index')
 
 // Connect to MongoDB before starting the server.
-const mongoUri = process.env.MONGODB_URI || config.mongo.host
 mongoose.connection.on('error', () => {
-	throw new Error(`unable to connect to database: ${mongoUri}`)
+	console.error('MongoDB connection error.')
 })
-await mongoose.connect(mongoUri)
+
+try {
+	await mongoose.connect(config.mongo.uri)
+} catch {
+	throw new Error(
+		'Unable to connect to MongoDB. '
+		+ 'Check the connection settings.'
+	)
+}
 
 // Enable Mongoose debug logging when configured.
 if (config.mongooseDebug) {
@@ -24,7 +31,7 @@ if (config.mongooseDebug) {
 }
 
 // Start the server on the configured port.
-app.listen(process.env.PORT || config.port, () => {
+app.listen(config.port, () => {
 	console.info(`server started on port ${config.port} (${config.env})`)
 })
 
