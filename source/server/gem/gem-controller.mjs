@@ -13,11 +13,16 @@ import {
 	serialize,
 	validateRequestBody,
 } from '../utils/helpers.mjs'
+import {
+	MAX_ATTRIBUTE_LENGTH,
+	MAX_NAME_LENGTH,
+	textFieldSchema,
+} from '../utils/input-validation.mjs'
 
 const gemBodySchema = Joi.object({
-	name: Joi.string().required(),
-	weapon: Joi.string().required(),
-	power: Joi.string().required(),
+	name: textFieldSchema(MAX_NAME_LENGTH).required(),
+	weapon: textFieldSchema(MAX_ATTRIBUTE_LENGTH).required(),
+	power: textFieldSchema(MAX_ATTRIBUTE_LENGTH).required(),
 })
 
 const serializeGem = (gem) => ({

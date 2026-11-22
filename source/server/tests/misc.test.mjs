@@ -61,6 +61,41 @@ describe('App and proxy', () => {
 		}
 	})
 
+	it('rejects malformed and oversized request bodies', async () => {
+		const nonAsciiHeader = await request('/', {
+			headers: { 'x-test': 'é' },
+		})
+		assert.equal(nonAsciiHeader.status, 400)
+		assert.equal((await nonAsciiHeader.json()).error, 'Request headers must contain only ASCII characters.')
+
+		const malformed = await request('/gem', {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: '{invalid',
+		})
+		assert.equal(malformed.status, 400)
+		assert.equal((await malformed.json()).error, 'Invalid request body.')
+
+		const oversized = await request('/gem', {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify({ name: 'x'.repeat(17_000) }),
+		})
+		assert.equal(oversized.status, 413)
+		assert.equal((await oversized.json()).error, 'Request body exceeds the allowed size.')
+
+		const tooManyParameters = new URLSearchParams()
+		for (let index = 0; index < 201; index += 1) {
+			tooManyParameters.append('field', String(index))
+		}
+		const tooMany = await request('/gem', {
+			method: 'POST',
+			body: tooManyParameters,
+		})
+		assert.equal(tooMany.status, 413)
+		assert.equal((await tooMany.json()).error, 'Request body exceeds the allowed size.')
+	})
+
 	it('forwards only app paths to Render, preserving request details', async () => {
 		const fetchMock = mock.method(globalThis, 'fetch', async () => new Response('ok'))
 		const original = new Request('https://projects.example/crystal-gem-api/gem?sort=name', {

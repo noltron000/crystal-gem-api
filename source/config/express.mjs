@@ -16,9 +16,26 @@ if (basePath && !basePath.startsWith('/')) {
 }
 app.locals.basePath = basePath
 
+// Input validation
+app.use((req, res, next) => {
+	const hasNonAsciiHeader = Object.values(req.headers)
+		.flat()
+		.some((value) => (
+			typeof value === 'string' && /[^\x00-\x7F]/.test(value)
+		))
+	if (hasNonAsciiHeader) {
+		return next(new HttpError(400, 'Request headers must contain only ASCII characters.'))
+	}
+	return next()
+})
+
 // Parse JSON and URL-encoded request bodies.
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '16kb' }))
+app.use(express.urlencoded({
+	extended: true,
+	limit: '16kb',
+	parameterLimit: 200,
+}))
 
 // Allow POST requests to override the HTTP method through the _method query parameter.
 app.use(methodOverride('_method'))
@@ -45,5 +62,16 @@ router.use('/gem', gem)
 router.use('/fusion', fusion)
 router.use(HttpError.handle)
 app.use(basePath || '/', router)
+
+// Input validation
+app.use((err, req, res, next) => {
+	if (err?.type === 'entity.too.large' || err?.type === 'parameters.too.many') {
+		return HttpError.handle(new HttpError(413, 'Request body exceeds the allowed size.'), req, res, next)
+	}
+	if (err?.type === 'entity.parse.failed') {
+		return HttpError.handle(new HttpError(400, 'Invalid request body.'), req, res, next)
+	}
+	return HttpError.handle(err, req, res, next)
+})
 
 export default app

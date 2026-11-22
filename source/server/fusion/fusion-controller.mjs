@@ -14,12 +14,18 @@ import {
 	serialize,
 	validateRequestBody,
 } from '../utils/helpers.mjs'
+import {
+	MAX_ATTRIBUTE_LENGTH,
+	MAX_FUSION_GEMS,
+	MAX_NAME_LENGTH,
+	textFieldSchema,
+} from '../utils/input-validation.mjs'
 
 const fusionBodySchema = Joi.object({
-	name: Joi.string().required(),
-	weapon: Joi.string().required(),
-	power: Joi.string().required(),
-	gems: Joi.array().items(Joi.string()).default([]),
+	name: textFieldSchema(MAX_NAME_LENGTH).required(),
+	weapon: textFieldSchema(MAX_ATTRIBUTE_LENGTH).required(),
+	power: textFieldSchema(MAX_ATTRIBUTE_LENGTH).required(),
+	gems: Joi.array().items(Joi.string()).max(MAX_FUSION_GEMS).default([]),
 })
 
 /** Translate duplicate-name database errors into fusion HTTP errors; rethrow other errors. */

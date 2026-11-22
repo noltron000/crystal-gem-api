@@ -70,6 +70,11 @@ describe('Fusion routes', () => {
 		const body = { name: fusion.name, weapon: fusion.weapon, power: fusion.power }
 		const invalid = await request('/fusion', json('POST', { ...body, gems: ['bad-id'] }))
 		assert.equal(invalid.status, 400)
+		const tooMany = await request('/fusion', json('POST', {
+			...body,
+			gems: Array(101).fill(gemID),
+		}))
+		assert.equal(tooMany.status, 400)
 		mock.method(Gem, 'countDocuments', async () => 0)
 		const missing = await request('/fusion', json('POST', { ...body, gems: [gemID] }))
 		assert.equal(missing.status, 400)

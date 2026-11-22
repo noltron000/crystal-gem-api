@@ -24,6 +24,9 @@ The app stores gems and fusions in MongoDB, including their names, weapons, powe
 Browse and manage records through the web interface, or retrieve collection and detail data through JSON endpoints.
 Forms support creating and editing gems and fusions, including user-created gemsonas.
 
+There is input validation/sanitization to ensure that the data received by the server is valid and safe.
+This helps prevent code injection attacks and other security vulnerabilities.
+
 ## Routes
 | Method     | Route                | Function                       |
 | :--------- | :------------------- | :----------------------------- |

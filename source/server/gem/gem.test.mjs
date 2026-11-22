@@ -68,12 +68,48 @@ describe('Gem routes', () => {
 		assert.equal(created.headers.get('location'), `${app.locals.basePath}/gem`)
 		assert.equal(save.mock.calls[0].this.name, 'Ruby')
 
+		const invalidValues = [
+			{ ...body, name: '   ' },
+			{ ...body, name: 'x'.repeat(101) },
+			{ ...body, power: 'line\nbreak' },
+			{ ...body, power: '\tHeat' },
+			{ ...body, power: 'Heat\r' },
+			{ ...body, power: 'Heat\x7F' },
+			{ ...body, power: '\x00Heat' },
+			{ ...body, name: 'Améthyste' },
+		]
+		for (const invalidValue of invalidValues) {
+			assert.equal((await request('/gem', json('POST', invalidValue))).status, 400)
+		}
+		assert.equal(save.mock.callCount(), 1)
+
+		const trimmed = await request('/gem', json('POST', {
+			...body,
+			name: ' Opal ',
+		}))
+		assert.equal(trimmed.status, 302)
+		assert.equal(save.mock.calls[1].this.name, 'Opal')
+
 		save.mock.mockImplementation(async () => {
 			throw Object.assign(new Error('duplicate'), { code: 11000, keyPattern: { name: 1 } })
 		})
 		const duplicate = await request('/gem', json('POST', body))
 		assert.equal(duplicate.status, 409)
 		assert.match((await duplicate.json()).error, /already exists/)
+	})
+
+	it('escapes special characters in rendered gem text', async () => {
+		const unsafeText = '<img src=x onerror=alert(1)>'
+		mock.method(Gem, 'findById', async () => ({
+			...gem,
+			name: unsafeText,
+			populate: async () => {},
+		}))
+		const response = await request(`/gem/${id}`)
+		assert.equal(response.status, 200)
+		const html = await response.text()
+		assert.ok(html.includes('&lt;img'))
+		assert.ok(!html.includes(unsafeText))
 	})
 
 	it('updates and deletes a gem, but prevents deleting a referenced gem', async () => {
