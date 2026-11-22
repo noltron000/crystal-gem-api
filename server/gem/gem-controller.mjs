@@ -1,7 +1,15 @@
 import express from 'express'
+import Joi from 'joi'
 import Gem from '../gem/gem-model.mjs'
 import { removeGemReferencesFromFusions } from '../utils/relationships.mjs'
+import { validateRequestBody } from '../utils/request-validation.mjs'
 import { serialize } from '../utils/serialize.mjs'
+
+const gemBodySchema = Joi.object({
+	name: Joi.string().required(),
+	weapon: Joi.string().required(),
+	power: Joi.string().required(),
+})
 
 const serializeGem = (gem) => ({
 	...serialize(gem),
@@ -29,13 +37,9 @@ router.get('/new', (req, res) => {
 	res.render('gem-new.hbs')
 })
 
-router.post('/', async (req, res) => {
+router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Create and save a new gem.
-	const gem = new Gem({
-		name: req.body.name,
-		weapon: req.body.weapon,
-		power: req.body.power,
-	})
+	const gem = new Gem(req.body)
 	await gem.save()
 	res.redirect('/gem')
 })
@@ -61,13 +65,9 @@ router.get('/:gemID/edit', async (req, res) => {
 	res.render('gem-edit', { gem: serialize(gem) })
 })
 
-router.put('/:gemID', async (req, res) => {
+router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Update a gem with the submitted data.
-	const gem = await Gem.findByIdAndUpdate(req.params.gemID, {
-		name: req.body.name,
-		weapon: req.body.weapon,
-		power: req.body.power,
-	})
+	const gem = await Gem.findByIdAndUpdate(req.params.gemID, req.body)
 	res.redirect(`/gem/${gem._id}`)
 })
 

@@ -1,8 +1,17 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import Joi from 'joi'
 import Gem from '../gem/gem-model.mjs'
 import Fusion from '../fusion/fusion-model.mjs'
+import { validateRequestBody } from '../utils/request-validation.mjs'
 import { serialize } from '../utils/serialize.mjs'
+
+const fusionBodySchema = Joi.object({
+	name: Joi.string().required(),
+	weapon: Joi.string().required(),
+	power: Joi.string().required(),
+	gems: Joi.array().items(Joi.string()).default([]),
+})
 
 const validateGemIDs = async (gemIDs) => {
 	if (gemIDs === undefined) return []
@@ -49,7 +58,7 @@ router.get('/new', async (req, res) => {
 	res.render('fusion-new.hbs', { gems: serialize(gems) })
 })
 
-router.post('/', async (req, res) => {
+router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Create a fusion and its gem relationships.
 	const gemIDs = await validateGemIDs(req.body.gems)
 	if (gemIDs === null) {
@@ -57,13 +66,7 @@ router.post('/', async (req, res) => {
 			.status(400)
 			.send('The selected gems are invalid or no longer exist.')
 	}
-	const fusionBody = {
-		name: req.body.name,
-		weapon: req.body.weapon,
-		power: req.body.power,
-		gems: gemIDs,
-	}
-	const fusion = new Fusion(fusionBody)
+	const fusion = new Fusion({ ...req.body, gems: gemIDs })
 	await fusion.save()
 	res.redirect('/fusion')
 })
@@ -103,7 +106,7 @@ router.get('/:fusionID/edit', async (req, res) => {
 	})
 })
 
-router.put('/:fusionID', async (req, res) => {
+router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Update a fusion and its gem relationships.
 	const gemIDs = await validateGemIDs(req.body.gems)
 	if (gemIDs === null) {
@@ -111,15 +114,9 @@ router.put('/:fusionID', async (req, res) => {
 			.status(400)
 			.send('The selected gems are invalid or no longer exist.')
 	}
-	const fusionBody = {
-		name: req.body.name,
-		weapon: req.body.weapon,
-		power: req.body.power,
-		gems: gemIDs,
-	}
 	const fusion = await Fusion.findByIdAndUpdate(
 		req.params.fusionID,
-		fusionBody,
+		{ ...req.body, gems: gemIDs },
 	)
 	res.redirect(`/fusion/${fusion._id}`)
 })
