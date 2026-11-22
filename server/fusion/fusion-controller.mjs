@@ -117,6 +117,7 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 	const fusion = await Fusion.findByIdAndUpdate(
 		req.params.fusionID,
 		{ ...req.body, gems: gemIDs },
+		{ runValidators: true },
 	)
 	res.redirect(`/fusion/${fusion._id}`)
 })

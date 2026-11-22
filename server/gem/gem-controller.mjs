@@ -67,7 +67,11 @@ router.get('/:gemID/edit', async (req, res) => {
 
 router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Update a gem with the submitted data.
-	const gem = await Gem.findByIdAndUpdate(req.params.gemID, req.body)
+	const gem = await Gem.findByIdAndUpdate(
+		req.params.gemID,
+		req.body,
+		{ runValidators: true },
+	)
 	res.redirect(`/gem/${gem._id}`)
 })
 
