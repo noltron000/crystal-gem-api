@@ -10,19 +10,14 @@
 			content='ie=edge'
 			http-equiv='X-UA-Compatible'
 		/>
-		<style>
-			pre {
-				display: block;
-				font-family: monospace;
-				white-space: pre;
-				margin: 1em 0px;
-			}
-		</style>
+		<link rel='stylesheet' href='{{basePath}}/style.css' />
 		<title>Document</title>
 	</head>
 
 	<body>
 		{{> navbar}}
-		{{{body}}}
+		<main>
+			{{{body}}}
+		</main>
 	</body>
 </html>

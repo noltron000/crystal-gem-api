@@ -17,7 +17,7 @@ In addition, two gems can fuse into a more powerful character or monster.
 Some fans of the community like to create new gem characters, called *"gemsonas"*.
 This API helps track the existing character cast, and create gemsonas.
 
-![The Crystal Gems](./assets/crystal-gems.jpg)
+![The Crystal Gems](./source/public/crystal-gems.jpg)
 
 ## About the App
 The app stores gems and fusions in MongoDB, including their names, weapons, powers, and relationships.
@@ -52,6 +52,7 @@ Forms support creating and editing gems and fusions, including user-created gems
 - `source/config/`: environment configuration and Express setup
 - `source/server/gem/` and `source/server/fusion/`: feature-specific controllers, models, and tests
 - `source/server/utils/`: shared server utilities
+- `source/public/`: static assets served by Express
 - `source/views/`: Handlebars templates
 
 ### Local setup

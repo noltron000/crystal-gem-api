@@ -33,6 +33,7 @@ app.set('views', fileURLToPath(new URL('../views', import.meta.url)))
 
 const router = express.Router()
 router.use(express.static('public'))
+router.use(express.static(fileURLToPath(new URL('../public', import.meta.url))))
 
 // Render the home page at the root route.
 router.get('/', (req, res) => {
