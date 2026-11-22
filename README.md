@@ -62,6 +62,9 @@ Requirements: Node.js 26 or later, Yarn, and a MongoDB instance.
 1. Start the app with `yarn start`.
 1. Open `http://localhost:4040/` (or use your configured port).
 
+### Tests
+Run `yarn test`. Route tests mock database operations, so they do not require MongoDB and do not verify database persistence.
+
 ### Deployment
 1. Deploy `render.yaml` on Render.
 	Set `MONGODB_URI` to the Atlas connection string and allowlist Render's outbound IP ranges in Atlas Network Access.
@@ -73,6 +76,6 @@ Requirements: Node.js 26 or later, Yarn, and a MongoDB instance.
 Render's free service sleeps after 15 minutes without traffic and can take about a minute to wake.
 
 ## Future work
-- Add automated tests and improve error handling
+- Improve error handling
 - Add c8 coverage reporting and Husky hooks
 - Add user provisioning
