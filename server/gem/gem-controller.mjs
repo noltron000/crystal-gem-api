@@ -47,12 +47,14 @@ router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 router.get('/:gemID', async (req, res) => {
 	// Fetch and render a gem with its related fusions.
 	const gem = await Gem.findById(req.params.gemID).populate('fusions')
+	if (!gem) return res.status(404).send('Gem not found.')
 	res.render('gem-show.hbs', { gem: serializeGem(gem) })
 })
 
 router.get('/:gemID/json', async (req, res) => {
 	// Fetch and return the gem details as JSON.
 	const gem = await Gem.findById(req.params.gemID).populate('fusions')
+	if (!gem) return res.status(404).json({ error: 'Gem not found.' })
 	res.status(200).json({
 		message: 'Show this gem with the fusions it creates.',
 		gem: serializeGem(gem),
@@ -62,6 +64,7 @@ router.get('/:gemID/json', async (req, res) => {
 router.get('/:gemID/edit', async (req, res) => {
 	// Fetch and render the gem edit form.
 	const gem = await Gem.findById(req.params.gemID)
+	if (!gem) return res.status(404).send('Gem not found.')
 	res.render('gem-edit', { gem: serialize(gem) })
 })
 
@@ -72,13 +75,15 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 		req.body,
 		{ runValidators: true },
 	)
+	if (!gem) return res.status(404).send('Gem not found.')
 	res.redirect(`/gem/${gem._id}`)
 })
 
 router.delete('/:gemID', async (req, res) => {
 	// Delete a gem.
 	const gemID = req.params.gemID
-	await Gem.findByIdAndDelete(gemID)
+	const gem = await Gem.findByIdAndDelete(gemID)
+	if (!gem) return res.status(404).send('Gem not found.')
 	await removeGemReferencesFromFusions(gemID)
 	res.redirect('/gem')
 })
