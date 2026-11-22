@@ -122,6 +122,7 @@ router.get('/:fusionID', async (req, res) => {
 router.get('/:fusionID/json', async (req, res) => {
 	// Fetch and return the fusion details as JSON.
 	const fusion = await findFusionOrThrow(req.params.fusionID)
+	await fusion.populate('gems')
 	res.status(200).json({
 		message: 'Show this fusion with the gems who create it.',
 		fusion,
