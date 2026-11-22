@@ -73,6 +73,9 @@ router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 
 router.get('/:fusionID', async (req, res) => {
 	// Fetch and render a fusion with its related gems.
+	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
+		return res.status(400).send('Invalid fusion ID.')
+	}
 	const fusion = await Fusion.findById(req.params.fusionID).populate('gems')
 	if (!fusion) return res.status(404).send('Fusion not found.')
 	res.render('fusion-show.hbs', { fusion: serialize(fusion) })
@@ -80,6 +83,9 @@ router.get('/:fusionID', async (req, res) => {
 
 router.get('/:fusionID/json', async (req, res) => {
 	// Fetch and return the fusion details as JSON.
+	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
+		return res.status(400).json({ error: 'Invalid fusion ID.' })
+	}
 	const fusion = await Fusion.findById(req.params.fusionID)
 	if (!fusion) return res.status(404).json({ error: 'Fusion not found.' })
 	res.status(200).json({
@@ -90,6 +96,9 @@ router.get('/:fusionID/json', async (req, res) => {
 
 router.get('/:fusionID/edit', async (req, res) => {
 	// Fetch all gems and render the fusion edit form.
+	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
+		return res.status(400).send('Invalid fusion ID.')
+	}
 	const fusion = await Fusion.findById(req.params.fusionID)
 	if (!fusion) return res.status(404).send('Fusion not found.')
 	const gems = await Gem.find({})
@@ -111,6 +120,9 @@ router.get('/:fusionID/edit', async (req, res) => {
 
 router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res) => {
 	// Update a fusion and its gem relationships.
+	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
+		return res.status(400).send('Invalid fusion ID.')
+	}
 	const gemIDs = await validateGemIDs(req.body.gems)
 	if (gemIDs === null) {
 		return res
@@ -128,6 +140,9 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 
 router.delete('/:fusionID', async (req, res) => {
 	// Delete a fusion.
+	if (!mongoose.isObjectIdOrHexString(req.params.fusionID)) {
+		return res.status(400).send('Invalid fusion ID.')
+	}
 	const fusion = await Fusion.findByIdAndDelete(req.params.fusionID)
 	if (!fusion) return res.status(404).send('Fusion not found.')
 	res.redirect('/fusion')

@@ -1,5 +1,6 @@
 import express from 'express'
 import Joi from 'joi'
+import mongoose from 'mongoose'
 import Gem from '../gem/gem-model.mjs'
 import { removeGemReferencesFromFusions } from '../utils/relationships.mjs'
 import { validateRequestBody } from '../utils/request-validation.mjs'
@@ -46,6 +47,9 @@ router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 
 router.get('/:gemID', async (req, res) => {
 	// Fetch and render a gem with its related fusions.
+	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
+		return res.status(400).send('Invalid gem ID.')
+	}
 	const gem = await Gem.findById(req.params.gemID).populate('fusions')
 	if (!gem) return res.status(404).send('Gem not found.')
 	res.render('gem-show.hbs', { gem: serializeGem(gem) })
@@ -53,6 +57,9 @@ router.get('/:gemID', async (req, res) => {
 
 router.get('/:gemID/json', async (req, res) => {
 	// Fetch and return the gem details as JSON.
+	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
+		return res.status(400).json({ error: 'Invalid gem ID.' })
+	}
 	const gem = await Gem.findById(req.params.gemID).populate('fusions')
 	if (!gem) return res.status(404).json({ error: 'Gem not found.' })
 	res.status(200).json({
@@ -63,6 +70,9 @@ router.get('/:gemID/json', async (req, res) => {
 
 router.get('/:gemID/edit', async (req, res) => {
 	// Fetch and render the gem edit form.
+	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
+		return res.status(400).send('Invalid gem ID.')
+	}
 	const gem = await Gem.findById(req.params.gemID)
 	if (!gem) return res.status(404).send('Gem not found.')
 	res.render('gem-edit', { gem: serialize(gem) })
@@ -70,6 +80,9 @@ router.get('/:gemID/edit', async (req, res) => {
 
 router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Update a gem with the submitted data.
+	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
+		return res.status(400).send('Invalid gem ID.')
+	}
 	const gem = await Gem.findByIdAndUpdate(
 		req.params.gemID,
 		req.body,
@@ -81,6 +94,9 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 
 router.delete('/:gemID', async (req, res) => {
 	// Delete a gem.
+	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
+		return res.status(400).send('Invalid gem ID.')
+	}
 	const gemID = req.params.gemID
 	const gem = await Gem.findByIdAndDelete(gemID)
 	if (!gem) return res.status(404).send('Gem not found.')
