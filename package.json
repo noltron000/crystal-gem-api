@@ -47,17 +47,17 @@
 		"yarn": ">=1.5.1"
 	},
 	"type": "module",
-	"main": "index.mjs",
+	"main": "source/index.mjs",
 	"files": [],
 	"scripts": {
-		"start": "node index.mjs",
+		"start": "node source/index.mjs",
 		"start:debug": "cross-env DEBUG=auth-api-starterpack:* yarn start",
-		"lint": "prettier --check *.mjs server config",
+		"lint": "prettier --check \"source/**/*.mjs\"",
 		"precommit": "yarn lint && yarn test",
 		"prepare": "husky",
-		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
+		"test": "cross-env NODE_ENV=test mocha --extension mjs --ui bdd --reporter spec --colors source/server --recursive",
 		"test:watch": "yarn test -- --watch",
-		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors server --recursive",
+		"test:coverage": "cross-env NODE_ENV=test c8 --reporter=lcov mocha --extension mjs --ui bdd --reporter spec --colors source/server --recursive",
 		"test:check-coverage": "yarn test:coverage && c8 check-coverage"
 	},
 	"dependencies": {
@@ -90,7 +90,7 @@
 		"exclude": [
 			"dist/**",
 			"coverage/**",
-			"index.mjs"
+			"source/index.mjs"
 		],
 		"reporter": [
 			"lcov"

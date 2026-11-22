@@ -3,6 +3,7 @@ import express from 'express'
 import { engine } from 'express-handlebars'
 import cors from 'cors'
 import methodOverride from 'method-override'
+import { fileURLToPath } from 'node:url'
 import { HttpError } from '../server/utils/http-errors.mjs'
 // Import the application routes.
 import gem from '../server/gem/gem-controller.mjs'
@@ -24,6 +25,7 @@ app.use(cors())
 // Configure Handlebars as the view engine.
 app.engine('.hbs', engine({ extname: '.hbs', defaultLayout: 'main' }))
 app.set('view engine', 'hbs')
+app.set('views', fileURLToPath(new URL('../views', import.meta.url)))
 
 // Render the home page at the root route.
 app.get('/', (req, res) => {
