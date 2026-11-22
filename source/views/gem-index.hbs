@@ -1,10 +1,12 @@
-<h2>Gem Index</h2>
-<ul>
-	{{#each gems}}
-		<li>
-			<a href='{{../basePath}}/gem/{{this._id}}'>
-				{{this.name}}
-			</a>
-		</li>
-	{{/each}}
-</ul>
+<section class='panel'>
+	<h2>Gem Index</h2>
+	<ul class='index-list'>
+		{{#each gems}}
+			<li>
+				<a href='{{../basePath}}/gem/{{this._id}}'>
+					{{this.name}}
+				</a>
+			</li>
+		{{/each}}
+	</ul>
+</section>

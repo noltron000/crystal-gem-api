@@ -1,26 +1,36 @@
-<h2>
-	Show {{fusion.name}}
-	<a href='{{basePath}}/fusion/{{fusion._id}}/json'>
-		<code>(JSON)</code>
-	</a>
-</h2>
+<section class='panel'>
+	<h2>
+		Show {{fusion.name}}
+		<a href='{{basePath}}/fusion/{{fusion._id}}/json'>
+			<code>(JSON)</code>
+		</a>
+	</h2>
 
-<h3>Gems</h3>
-{{#each fusion.gems}}
-	<p>{{this.name}}</p>
-{{/each}}
+	<div class='detail-grid'>
+		<section>
+			<h3>Gems</h3>
+			{{#each fusion.gems}}
+				<p>{{this.name}}</p>
+			{{/each}}
+		</section>
 
-<h3>Weapons</h3>
-<p>{{fusion.weapon}}</p>
+		<section>
+			<h3>Weapons</h3>
+			<p>{{fusion.weapon}}</p>
+		</section>
 
-<h3>Powers</h3>
-<p>{{fusion.power}}</p>
+		<section>
+			<h3>Powers</h3>
+			<p>{{fusion.power}}</p>
+		</section>
+	</div>
 
-<h4>
-	<a
-		href='{{basePath}}/fusion/{{fusion._id}}/edit'
-		style='outline:solid'
-	>
-		Edit
-	</a>
-</h4>
+	<p>
+		<a
+			href='{{basePath}}/fusion/{{fusion._id}}/edit'
+			class='button-link'
+		>
+			Edit
+		</a>
+	</p>
+</section>

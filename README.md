@@ -17,7 +17,7 @@ In addition, two gems can fuse into a more powerful character or monster.
 Some fans of the community like to create new gem characters, called *"gemsonas"*.
 This API helps track the existing character cast, and create gemsonas.
 
-![The Crystal Gems](./assets/crystal-gems.jpg)
+![The Crystal Gems](./source/public/crystal-gems.jpg)
 
 ## About the App
 The app stores gems and fusions in MongoDB, including their names, weapons, powers, and relationships.
@@ -52,6 +52,7 @@ Forms support creating and editing gems and fusions, including user-created gems
 - `source/config/`: environment configuration and Express setup
 - `source/server/gem/` and `source/server/fusion/`: feature-specific controllers, models, and tests
 - `source/server/utils/`: shared server utilities
+- `source/public/`: static assets served by Express
 - `source/views/`: Handlebars templates
 
 ### Local setup
@@ -60,6 +61,9 @@ Requirements: Node.js 26 or later, Yarn, and a MongoDB instance.
 1. Copy `.env.example` to `.env` and set `MONGODB_URI` to your MongoDB connection string. The example uses a local database. `PORT` is optional and defaults to `4040`.
 1. Start the app with `yarn start`.
 1. Open `http://localhost:4040/` (or use your configured port).
+
+### Tests
+Run `yarn test`. Route tests mock database operations, so they do not require MongoDB and do not verify database persistence.
 
 ### Deployment
 1. Deploy `render.yaml` on Render.
@@ -72,6 +76,6 @@ Requirements: Node.js 26 or later, Yarn, and a MongoDB instance.
 Render's free service sleeps after 15 minutes without traffic and can take about a minute to wake.
 
 ## Future work
-- Add automated tests and improve error handling
+- Improve error handling
 - Add c8 coverage reporting and Husky hooks
 - Add user provisioning
