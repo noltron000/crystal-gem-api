@@ -109,7 +109,7 @@ router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 	const gemIDs = await validateGemIDs(req.body.gems)
 	const fusion = new Fusion({ ...req.body, gems: gemIDs })
 	await runWithDuplicateFusionNameHandling(() => fusion.save())
-	res.redirect('/fusion')
+	res.redirect(req.baseUrl)
 })
 
 router.get('/:fusionID', async (req, res) => {
@@ -163,7 +163,7 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 	))
 
 	if (!fusion) throw new FusionNotFoundError()
-	res.redirect(`/fusion/${fusion._id}`)
+	res.redirect(`${req.baseUrl}/${fusion._id}`)
 })
 
 router.delete('/:fusionID', async (req, res) => {
@@ -171,7 +171,7 @@ router.delete('/:fusionID', async (req, res) => {
 	assertValidFusionID(req.params.fusionID)
 	const fusion = await Fusion.findByIdAndDelete(req.params.fusionID)
 	if (!fusion) throw new FusionNotFoundError()
-	res.redirect('/fusion')
+	res.redirect(req.baseUrl)
 })
 
 export default router

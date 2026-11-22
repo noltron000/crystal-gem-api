@@ -1,6 +1,6 @@
 <h2>
 	Show {{gem.name}}
-	<a href='/gem/{{gem._id}}/json'>
+	<a href='{{basePath}}/gem/{{gem._id}}/json'>
 		<code>(JSON)</code>
 	</a>
 </h2>
@@ -18,7 +18,7 @@
 
 <h4>
 	<a
-		href='/gem/{{gem._id}}/edit'
+		href='{{basePath}}/gem/{{gem._id}}/edit'
 		style='outline:solid'
 	>
 		Edit

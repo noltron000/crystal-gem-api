@@ -1,8 +1,8 @@
-<h2>Edit {{gem.name}}</h2>
+<h2>Create a gem</h2>
 
-{{!-- Add the "Edit Gem" form. --}}
+{{!-- Add the "Create Gem" form. --}}
 <form
-	action='/gem/{{gem._id}}?_method=PUT'
+	action='{{basePath}}/gem'
 	method='post'
 >
 
@@ -18,7 +18,6 @@
 				id='name'
 				name='name'
 				type='text'
-				value='{{gem.name}}'
 			/>
 		</div>
 	</fieldset>
@@ -35,7 +34,6 @@
 				id='weapon'
 				name='weapon'
 				type='text'
-				value='{{gem.weapon}}'
 			/>
 		</div>
 
@@ -48,21 +46,12 @@
 				id='power'
 				name='power'
 				type='text'
-				value='{{gem.power}}'
 			/>
 		</div>
 
 	</fieldset>
 	<button type='submit'>
-		Update
+		Submit
 	</button>
-</form>
 
-<form
-	action='/gem/{{gem._id}}?_method=DELETE'
-	method='post'
->
-	<button type='submit'>
-		Delete
-	</button>
 </form>

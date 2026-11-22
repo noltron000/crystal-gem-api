@@ -2,7 +2,7 @@
 
 {{!-- Add the "Edit Fusion" form. --}}
 <form
-	action='/fusion/{{fusion._id}}?_method=PUT'
+	action='{{basePath}}/fusion/{{fusion._id}}?_method=PUT'
 	method='post'
 >
 
@@ -75,7 +75,7 @@
 </form>
 
 <form
-	action='/fusion/{{fusion._id}}?_method=DELETE'
+	action='{{basePath}}/fusion/{{fusion._id}}?_method=DELETE'
 	method='post'
 >
 	<button type='submit'>

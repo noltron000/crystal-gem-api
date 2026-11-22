@@ -1,8 +1,8 @@
-<h2>Create a gem</h2>
+<h2>Create a fusion</h2>
 
-{{!-- Add the "Create Gem" form. --}}
+{{!-- Add the "Create Fusion" form. --}}
 <form
-	action='/gem'
+	action='{{basePath}}/fusion'
 	method='post'
 >
 
@@ -11,7 +11,7 @@
 
 		<div>
 			<label for='name'>
-				Gem
+				Fusion Gem
 			</label>
 			<br />
 			<input
@@ -20,6 +20,21 @@
 				type='text'
 			/>
 		</div>
+
+		{{#each gems}}
+			<div>
+				<input
+					id='{{this._id}}'
+					name='gems[]' {{!-- Express parses this bracketed name as an array. --}}
+					type='checkbox'
+					value='{{this._id}}'
+				/>
+				<label for='{{this._id}}'>
+					{{this.name}}
+				</label>
+			</div>
+		{{/each}}
+
 	</fieldset>
 
 	<fieldset>
