@@ -1,10 +1,12 @@
-<h2>Fusion Index</h2>
-<ul>
-	{{#each fusions}}
-		<li>
-			<a href='{{../basePath}}/fusion/{{this._id}}'>
-				{{this.name}}
-			</a>
-		</li>
-	{{/each}}
-</ul>
+<section class='panel'>
+	<h2>Fusion Index</h2>
+	<ul class='index-list'>
+		{{#each fusions}}
+			<li>
+				<a href='{{../basePath}}/fusion/{{this._id}}'>
+					{{this.name}}
+				</a>
+			</li>
+		{{/each}}
+	</ul>
+</section>

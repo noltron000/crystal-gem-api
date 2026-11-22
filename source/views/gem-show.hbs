@@ -1,26 +1,36 @@
-<h2>
-	Show {{gem.name}}
-	<a href='{{basePath}}/gem/{{gem._id}}/json'>
-		<code>(JSON)</code>
-	</a>
-</h2>
+<section class='panel'>
+	<h2>
+		Show {{gem.name}}
+		<a href='{{basePath}}/gem/{{gem._id}}/json'>
+			<code>(JSON)</code>
+		</a>
+	</h2>
 
-<h3>Fusions</h3>
-{{#each gem.fusions}}
-	<p>{{this.name}}</p>
-{{/each}}
+	<div class='detail-grid'>
+		<section>
+			<h3>Fusions</h3>
+			{{#each gem.fusions}}
+				<p>{{this.name}}</p>
+			{{/each}}
+		</section>
 
-<h3>Weapons</h3>
-<p>{{gem.weapon}}</p>
+		<section>
+			<h3>Weapons</h3>
+			<p>{{gem.weapon}}</p>
+		</section>
 
-<h3>Powers</h3>
-<p>{{gem.power}}</p>
+		<section>
+			<h3>Powers</h3>
+			<p>{{gem.power}}</p>
+		</section>
+	</div>
 
-<h4>
-	<a
-		href='{{basePath}}/gem/{{gem._id}}/edit'
-		class='button-link'
-	>
-		Edit
-	</a>
-</h4>
+	<p>
+		<a
+			href='{{basePath}}/gem/{{gem._id}}/edit'
+			class='button-link'
+		>
+			Edit
+		</a>
+	</p>
+</section>
