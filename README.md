@@ -1,3 +1,5 @@
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+
 # Steven Universe Crystal Gems API
 *You an visit the app live on the web, hosted at [**projects.nebuloid.dev/crystal-gem-api**](https://projects.nebuloid.dev/crystal-gem-api)!*
 
