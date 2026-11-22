@@ -67,7 +67,14 @@ router.post('/', validateRequestBody(fusionBodySchema), async (req, res) => {
 			.send('The selected gems are invalid or no longer exist.')
 	}
 	const fusion = new Fusion({ ...req.body, gems: gemIDs })
-	await fusion.save()
+	try {
+		await fusion.save()
+	} catch (err) {
+		if (err.code === 11000 && err.keyPattern?.name === 1) {
+			return res.status(409).send('A fusion with that name already exists.')
+		}
+		throw err
+	}
 	res.redirect('/fusion')
 })
 
@@ -129,11 +136,19 @@ router.put('/:fusionID', validateRequestBody(fusionBodySchema), async (req, res)
 			.status(400)
 			.send('The selected gems are invalid or no longer exist.')
 	}
-	const fusion = await Fusion.findByIdAndUpdate(
-		req.params.fusionID,
-		{ ...req.body, gems: gemIDs },
-		{ runValidators: true },
-	)
+	let fusion
+	try {
+		fusion = await Fusion.findByIdAndUpdate(
+			req.params.fusionID,
+			{ ...req.body, gems: gemIDs },
+			{ runValidators: true },
+		)
+	} catch (err) {
+		if (err.code === 11000 && err.keyPattern?.name === 1) {
+			return res.status(409).send('A fusion with that name already exists.')
+		}
+		throw err
+	}
 	if (!fusion) return res.status(404).send('Fusion not found.')
 	res.redirect(`/fusion/${fusion._id}`)
 })

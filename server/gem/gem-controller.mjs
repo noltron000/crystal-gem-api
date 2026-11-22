@@ -41,7 +41,14 @@ router.get('/new', (req, res) => {
 router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Create and save a new gem.
 	const gem = new Gem(req.body)
-	await gem.save()
+	try {
+		await gem.save()
+	} catch (err) {
+		if (err.code === 11000 && err.keyPattern?.name === 1) {
+			return res.status(409).send('A gem with that name already exists.')
+		}
+		throw err
+	}
 	res.redirect('/gem')
 })
 
@@ -83,11 +90,19 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	if (!mongoose.isObjectIdOrHexString(req.params.gemID)) {
 		return res.status(400).send('Invalid gem ID.')
 	}
-	const gem = await Gem.findByIdAndUpdate(
-		req.params.gemID,
-		req.body,
-		{ runValidators: true },
-	)
+	let gem
+	try {
+		gem = await Gem.findByIdAndUpdate(
+			req.params.gemID,
+			req.body,
+			{ runValidators: true },
+		)
+	} catch (err) {
+		if (err.code === 11000 && err.keyPattern?.name === 1) {
+			return res.status(409).send('A gem with that name already exists.')
+		}
+		throw err
+	}
 	if (!gem) return res.status(404).send('Gem not found.')
 	res.redirect(`/gem/${gem._id}`)
 })
