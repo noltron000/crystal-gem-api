@@ -73,7 +73,7 @@ router.post('/', validateRequestBody(gemBodySchema), async (req, res) => {
 	// Create and save a new gem.
 	const gem = new Gem(req.body)
 	await runWithDuplicateGemNameHandling(() => gem.save())
-	res.redirect('/gem')
+	res.redirect(req.baseUrl)
 })
 
 router.get('/:gemID', async (req, res) => {
@@ -112,7 +112,7 @@ router.put('/:gemID', validateRequestBody(gemBodySchema), async (req, res) => {
 	))
 
 	if (!gem) throw new GemNotFoundError()
-	res.redirect(`/gem/${gem._id}`)
+	res.redirect(`${req.baseUrl}/${gem._id}`)
 })
 
 router.delete('/:gemID', async (req, res) => {
@@ -122,7 +122,7 @@ router.delete('/:gemID', async (req, res) => {
 	await assertGemNotReferenced(gemID)
 	const gem = await Gem.findByIdAndDelete(gemID)
 	if (!gem) throw new GemNotFoundError()
-	res.redirect('/gem')
+	res.redirect(req.baseUrl)
 })
 
 export default router

@@ -2,7 +2,7 @@
 
 {{!-- Add the "Edit Gem" form. --}}
 <form
-	action='/gem/{{gem._id}}?_method=PUT'
+	action='{{basePath}}/gem/{{gem._id}}?_method=PUT'
 	method='post'
 >
 
@@ -59,7 +59,7 @@
 </form>
 
 <form
-	action='/gem/{{gem._id}}?_method=DELETE'
+	action='{{basePath}}/gem/{{gem._id}}?_method=DELETE'
 	method='post'
 >
 	<button type='submit'>
